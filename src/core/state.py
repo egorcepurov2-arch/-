@@ -10,6 +10,8 @@ from src.network.router import CorridorRouter
 from src.safety.odd_engine import ODDEngine
 from src.safety.guard import SafetyGuard
 from src.sources.health import SourceHealthTracker
+from src.dispatch.resource_manager import ResourceManager
+from src.dispatch.hub_manager import HubManager
 
 
 class SystemState:
@@ -32,7 +34,14 @@ class SystemState:
         self.estimator = SegmentStateEstimator(self.ref)
         self.router = CorridorRouter(self.graph, self.ref)
         self.odd_engine = ODDEngine(self.ref)
-        self.safety_guard = SafetyGuard(self.graph, self.ref)
+        self.resource_manager = ResourceManager(self.graph, self.ref)
+        self.hub_manager = HubManager(self.graph, self.ref)
+        self.safety_guard = SafetyGuard(
+            self.graph,
+            self.ref,
+            resource_manager=self.resource_manager,
+            hub_manager=self.hub_manager,
+        )
         self.source_tracker = SourceHealthTracker(self.ref)
 
         # Cached estimates
@@ -83,7 +92,10 @@ class SystemState:
         # 3. Update environmental observations (weather & RSU)
         self.odd_engine.update_from_events(events)
 
-        # 4. Track vehicle telemetry
+        # 4. Update logistics hub status (HUB_STATUS events)
+        self.hub_manager.update_from_events(self.step_index, events)
+
+        # 5. Track vehicle telemetry
         for ev in events:
             ev_type = ev.get("event_type")
 
@@ -141,6 +153,8 @@ class SystemState:
             odd_assessments=vehicle_assessments,
             vehicles_state=self.vehicles_last_seen,
             blocked_segments=blocked_segments,
+            resource_manager=self.resource_manager,
+            hub_manager=self.hub_manager,
         )
 
         snapshot = {
