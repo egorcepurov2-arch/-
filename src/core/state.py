@@ -4,6 +4,9 @@ import sys
 from typing import Any, Dict, List, Optional, Set
 
 from src.config import ReferenceData, load_reference_data
+from src.network.graph import NetworkGraph
+from src.network.estimator import SegmentStateEstimator
+from src.network.router import CorridorRouter
 
 
 class SystemState:
@@ -21,18 +24,18 @@ class SystemState:
         self.step_index: int = 0
         self.decision_time: str = ""
 
-        # Resource managers
-        # Remote support: strictly <= 6 concurrent sessions
-        self.active_remote_sessions: Set[str] = set()
+        # Subsystems
+        self.graph = NetworkGraph(self.ref)
+        self.estimator = SegmentStateEstimator(self.ref)
+        self.router = CorridorRouter(self.graph, self.ref)
 
-        # Safe stops: safe_stop_id -> occupied count
-        self.safe_stop_occupancy: Dict[str, int] = {
-            stop_id: 0 for stop_id in self.ref.safe_stops
-        }
+        # Segment estimates cache
+        self.latest_segment_estimates: List[Dict[str, Any]] = []
 
         # Vehicles state tracking
         self.vehicles_last_seen: Dict[str, Dict[str, Any]] = {}
         for vid in self.ref.vehicle_ids:
+            v_catalog = self.ref.vehicles.get(vid, {})
             self.vehicles_last_seen[vid] = {
                 "vehicle_id": vid,
                 "current_segment": None,
@@ -40,17 +43,13 @@ class SystemState:
                 "odd_status": "COMPLIANT",
                 "violation_codes": [],
                 "motion_action": "CONTINUE",
-                "remote_support": False,
+                "destination_hub_id": v_catalog.get("destination_hub_id", "HUB-02"),
+                "odd_profile_id": v_catalog.get("odd_profile_id", "ODD-A"),
+                "gross_mass_t": v_catalog.get("gross_mass_t", 25.0),
+                "cargo_priority": v_catalog.get("cargo_priority", 3),
+                "is_active": True,
+                "last_seen_step": 0,
                 "last_event_time": None,
-            }
-
-        # Segment states: segment_id -> state dict
-        self.segment_states: Dict[str, Dict[str, Any]] = {}
-        for sid in self.ref.segment_ids:
-            self.segment_states[sid] = {
-                "state": "OPEN",
-                "confidence": 1.0,
-                "rationale_codes": ["STATE_OPEN"],
             }
 
         # Infrastructure sources state: source_id -> assessment dict
@@ -68,33 +67,46 @@ class SystemState:
         Process observation events in the current packet.
         Updates internal tracking for telemetry and sensor health.
         """
+        # 1. Update segment state estimates via estimator
+        self.latest_segment_estimates = self.estimator.process_step(
+            step_index=self.step_index,
+            events=events,
+            source_trust={
+                s: d["trust_score"] for s, d in self.source_assessments.items()
+            },
+        )
+
+        # 2. Track vehicle telemetry
+        seen_in_packet: Set[str] = set()
         for ev in events:
             ev_type = ev.get("event_type")
-            source_id = ev.get("source_id")
 
-            # Track vehicle telemetry
             if ev_type == "VEHICLE_TELEMETRY":
                 vid = ev.get("vehicle_id")
                 if vid and vid in self.vehicles_last_seen:
+                    seen_in_packet.add(vid)
                     v_state = self.vehicles_last_seen[vid]
                     v_state["current_segment"] = ev.get("segment_id")
                     v_state["speed_kmh"] = ev.get("speed_kmh", 0.0)
+                    if ev.get("destination_hub_id"):
+                        v_state["destination_hub_id"] = ev["destination_hub_id"]
+                    if ev.get("cargo_priority"):
+                        v_state["cargo_priority"] = ev["cargo_priority"]
+                    if ev.get("odd_profile_id"):
+                        v_state["odd_profile_id"] = ev["odd_profile_id"]
                     v_state["last_event_time"] = ev.get("event_time")
+                    v_state["is_active"] = True
+                    v_state["last_seen_step"] = self.step_index
 
     def build_decision_snapshot(self) -> Dict[str, Any]:
         """
         Generate a full decision snapshot strictly conforming to 03_decision.schema.json.
         """
         # 1. State estimates for all 86 segments
-        state_estimates = []
-        for sid in self.ref.segment_ids:
-            s_info = self.segment_states.get(sid, {})
-            state_estimates.append({
-                "segment_id": sid,
-                "state": s_info.get("state", "OPEN"),
-                "confidence": float(s_info.get("confidence", 1.0)),
-                "rationale_codes": s_info.get("rationale_codes", ["STATE_OPEN"]),
-            })
+        state_estimates = self.latest_segment_estimates
+        if not state_estimates:
+            # Fallback if update_from_events was not called
+            state_estimates = self.estimator.process_step(self.step_index, [])
 
         # 2. Source assessments for all 50 infrastructure sources
         source_assessments = []
@@ -112,25 +124,28 @@ class SystemState:
         vehicle_assessments = []
         for vid in self.ref.vehicle_ids:
             v_info = self.vehicles_last_seen.get(vid, {})
-            vehicle_assessments.append({
-                "vehicle_id": vid,
-                "odd_status": v_info.get("odd_status", "COMPLIANT"),
-                "violation_codes": v_info.get("violation_codes", []),
-                "confidence": 1.0,
-            })
+            is_active = v_info.get("is_active", True)
+            if not is_active or not v_info.get("current_segment"):
+                vehicle_assessments.append({
+                    "vehicle_id": vid,
+                    "odd_status": "UNKNOWN",
+                    "violation_codes": [],
+                    "confidence": 1.0,
+                })
+            else:
+                vehicle_assessments.append({
+                    "vehicle_id": vid,
+                    "odd_status": v_info.get("odd_status", "COMPLIANT"),
+                    "violation_codes": v_info.get("violation_codes", []),
+                    "confidence": 1.0,
+                })
 
-        # 4. Vehicle actions for all 72 vehicles
-        vehicle_actions = []
-        for vid in self.ref.vehicle_ids:
-            v_info = self.vehicles_last_seen.get(vid, {})
-            action = v_info.get("motion_action", "CONTINUE")
-            vehicle_actions.append({
-                "vehicle_id": vid,
-                "motion_action": action,
-                "remote_support_required": bool(v_info.get("remote_support", False)),
-                "confidence": 1.0,
-                "rationale_codes": ["STATE_OPEN"],
-            })
+        # 4. Vehicle actions for all 72 vehicles via CorridorRouter
+        vehicle_actions = self.router.plan_vehicle_actions(
+            step_index=self.step_index,
+            segment_estimates=state_estimates,
+            vehicles_state=self.vehicles_last_seen,
+        )
 
         snapshot = {
             "scenario_id": self.scenario_id,
