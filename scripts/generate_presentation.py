@@ -17,14 +17,10 @@ HTML_CONTENT = """<!DOCTYPE html>
 <meta charset="UTF-8">
 <style>
   @page {
-    size: 297mm 210mm; /* A4 Landscape */
+    size: 297mm 210mm;
     margin: 0;
   }
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: #0b132b;
@@ -37,255 +33,196 @@ HTML_CONTENT = """<!DOCTYPE html>
     height: 210mm;
     page-break-after: always;
     page-break-inside: avoid;
-    padding: 16mm 20mm;
+    padding: 14mm 20mm 24mm 20mm;
     position: relative;
     overflow: hidden;
     background: radial-gradient(circle at 85% 15%, #1c2541 0%, #0b132b 70%);
     display: flex;
     flex-direction: column;
   }
-  .slide:last-child {
-    page-break-after: auto;
-  }
+  .slide:last-child { page-break-after: auto; }
 
-  /* Header */
   .slide-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid rgba(0, 245, 212, 0.3);
-    padding-bottom: 6mm;
-    margin-bottom: 8mm;
+    border-bottom: 2px solid rgba(0,245,212,0.3);
+    padding-bottom: 5mm;
+    margin-bottom: 7mm;
   }
-  .slide-title {
-    font-size: 26pt;
-    font-weight: 800;
-    color: #ffffff;
-    letter-spacing: -0.5px;
-  }
-  .slide-subtitle {
-    font-size: 13pt;
-    color: #48cae4;
-    font-weight: 500;
-  }
+  .slide-title { font-size: 24pt; font-weight: 800; color: #ffffff; }
+  .slide-subtitle { font-size: 12pt; color: #48cae4; font-weight: 500; }
   .team-badge {
-    background: rgba(0, 245, 212, 0.15);
+    background: rgba(0,245,212,0.15);
     border: 1px solid #00f5d4;
     color: #00f5d4;
     padding: 4px 14px;
     border-radius: 20px;
-    font-size: 11pt;
+    font-size: 10pt;
     font-weight: 700;
-    letter-spacing: 0.5px;
   }
-
-  /* Footer */
   .slide-footer {
     position: absolute;
-    bottom: 8mm;
+    bottom: 7mm;
     left: 20mm;
     right: 20mm;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    font-size: 9pt;
+    font-size: 8.5pt;
     color: #64748b;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 4mm;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 3mm;
   }
+  .content { flex: 1; display: flex; gap: 7mm; }
+  .col { flex: 1; display: flex; flex-direction: column; gap: 4mm; }
 
-  /* Content area */
-  .content {
-    flex: 1;
-    display: flex;
-    gap: 8mm;
-  }
-  .col-2 {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 5mm;
-  }
-  .col-3 {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4mm;
-  }
-
-  /* Cards */
   .card {
-    background: rgba(28, 37, 65, 0.7);
-    border: 1px solid rgba(72, 202, 228, 0.25);
+    background: rgba(28,37,65,0.7);
+    border: 1px solid rgba(72,202,228,0.25);
     border-radius: 8px;
-    padding: 5mm 6mm;
+    padding: 4mm 5mm;
   }
   .card-title {
-    font-size: 13pt;
-    font-weight: 700;
-    color: #00f5d4;
-    margin-bottom: 3mm;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 12pt; font-weight: 700; color: #00f5d4;
+    margin-bottom: 2.5mm;
+    display: flex; align-items: center; gap: 7px;
   }
-  .card-body {
-    font-size: 10.5pt;
-    line-height: 1.45;
-    color: #cbd5e1;
-  }
-  .card-body ul {
-    list-style-type: none;
-  }
-  .card-body li {
-    position: relative;
-    padding-left: 16px;
-    margin-bottom: 5px;
-  }
-  .card-body li::before {
-    content: "▹";
-    position: absolute;
-    left: 0;
-    color: #48cae4;
-    font-weight: bold;
-  }
+  .card-body { font-size: 9.5pt; line-height: 1.45; color: #cbd5e1; }
+  .card-body ul { list-style-type: none; }
+  .card-body li { position: relative; padding-left: 14px; margin-bottom: 4px; }
+  .card-body li::before { content: "▹"; position: absolute; left: 0; color: #48cae4; font-weight: bold; }
 
-  /* Stat highlights */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5mm;
-    margin-bottom: 5mm;
-  }
+  .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5mm; margin-bottom: 5mm; }
   .stat-box {
-    background: linear-gradient(135deg, rgba(28, 37, 65, 0.9) 0%, rgba(11, 19, 43, 0.9) 100%);
-    border: 1px solid rgba(0, 245, 212, 0.3);
+    background: linear-gradient(135deg, rgba(28,37,65,0.9) 0%, rgba(11,19,43,0.9) 100%);
+    border: 1px solid rgba(0,245,212,0.3);
     border-radius: 8px;
-    padding: 5mm;
+    padding: 4mm;
     text-align: center;
   }
-  .stat-value {
-    font-size: 26pt;
-    font-weight: 900;
-    color: #00f5d4;
-    line-height: 1.1;
-  }
-  .stat-value.highlight-red {
-    color: #ff6b6b;
-  }
-  .stat-value.highlight-green {
-    color: #00f5d4;
-  }
-  .stat-label {
-    font-size: 9pt;
-    color: #94a3b8;
-    margin-top: 3px;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
+  .stat-value { font-size: 24pt; font-weight: 900; color: #00f5d4; line-height: 1.1; }
+  .stat-value.red { color: #ff6b6b; }
+  .stat-value.green { color: #00f5d4; }
+  .stat-label { font-size: 8pt; color: #94a3b8; margin-top: 2px; text-transform: uppercase; font-weight: 600; }
 
-  /* Table styling */
-  table.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 9.5pt;
-    color: #e2e8f0;
-  }
+  table.data-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; color: #e2e8f0; }
   table.data-table th {
-    background: rgba(72, 202, 228, 0.15);
-    color: #00f5d4;
-    text-align: left;
-    padding: 6px 10px;
-    font-weight: 700;
-    border-bottom: 1px solid rgba(0, 245, 212, 0.3);
+    background: rgba(72,202,228,0.15); color: #00f5d4;
+    text-align: left; padding: 5px 9px; font-weight: 700;
+    border-bottom: 1px solid rgba(0,245,212,0.3);
   }
-  table.data-table td {
-    padding: 6px 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  }
-  table.data-table tr:hover {
-    background: rgba(255, 255, 255, 0.03);
-  }
+  table.data-table td { padding: 5px 9px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  table.data-table .good { color: #00f5d4; font-weight: 700; }
+  table.data-table .bad  { color: #ff6b6b; font-weight: 700; }
 
-  /* Title Slide Specifics */
+  /* SLIDE 1 — Title */
   .title-slide {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    justify-content: center; align-items: center; text-align: center;
     background: radial-gradient(circle at 50% 50%, #1c2541 0%, #0b132b 80%);
   }
   .title-hero {
-    font-size: 38pt;
-    font-weight: 900;
-    color: #ffffff;
-    line-height: 1.15;
-    margin-bottom: 4mm;
-    text-shadow: 0 4px 20px rgba(0, 245, 212, 0.3);
+    font-size: 40pt; font-weight: 900; color: #ffffff;
+    line-height: 1.1; margin-bottom: 3mm;
+    text-shadow: 0 4px 20px rgba(0,245,212,0.3);
   }
-  .title-hero span {
-    color: #00f5d4;
-  }
-  .title-subhero {
-    font-size: 18pt;
-    color: #48cae4;
-    font-weight: 500;
-    margin-bottom: 10mm;
-    max-width: 220mm;
-  }
+  .title-hero span { color: #00f5d4; }
+  .title-subhero { font-size: 17pt; color: #48cae4; font-weight: 500; margin-bottom: 9mm; }
   .title-meta-box {
-    display: flex;
-    gap: 12mm;
-    background: rgba(28, 37, 65, 0.6);
-    border: 1px solid rgba(0, 245, 212, 0.3);
-    padding: 6mm 14mm;
-    border-radius: 12px;
+    display: flex; gap: 12mm;
+    background: rgba(28,37,65,0.6);
+    border: 1px solid rgba(0,245,212,0.3);
+    padding: 5mm 14mm; border-radius: 12px;
   }
-  .title-meta-item {
-    text-align: left;
-  }
-  .title-meta-label {
+  .meta-item { text-align: left; }
+  .meta-label { font-size: 8pt; color: #94a3b8; text-transform: uppercase; font-weight: 700; }
+  .meta-value { font-size: 11.5pt; color: #ffffff; font-weight: 700; }
+
+  /* Pipeline flow diagram */
+  .pipeline {
+    display: flex; align-items: center; gap: 0;
+    background: rgba(11,19,43,0.6);
+    border: 1px solid rgba(0,245,212,0.2);
+    border-radius: 8px; padding: 4mm 5mm;
     font-size: 8.5pt;
-    color: #94a3b8;
-    text-transform: uppercase;
-    font-weight: 700;
   }
-  .title-meta-value {
-    font-size: 12pt;
-    color: #ffffff;
+  .pipe-node {
+    background: rgba(0,245,212,0.12);
+    border: 1px solid rgba(0,245,212,0.4);
+    border-radius: 6px;
+    padding: 3px 8px;
+    color: #00f5d4;
     font-weight: 700;
+    white-space: nowrap;
   }
+  .pipe-arrow {
+    color: #48cae4; font-size: 10pt; padding: 0 3px;
+  }
+
+  /* Module grid for slide 4 */
+  .mod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+  .mod-card {
+    background: rgba(28,37,65,0.7);
+    border-left: 3px solid #00f5d4;
+    border-radius: 0 6px 6px 0;
+    padding: 3mm 4mm;
+  }
+  .mod-num { font-size: 8pt; color: #48cae4; font-weight: 700; text-transform: uppercase; }
+  .mod-name { font-size: 11pt; font-weight: 800; color: #ffffff; margin: 1mm 0; }
+  .mod-desc { font-size: 8.5pt; color: #94a3b8; line-height: 1.4; }
+
+  /* Scenario cards slide 5 */
+  .scenario-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5mm; }
+  .scenario-card {
+    background: rgba(28,37,65,0.8);
+    border: 1px solid rgba(72,202,228,0.25);
+    border-radius: 8px;
+    padding: 5mm;
+  }
+  .scenario-score { font-size: 28pt; font-weight: 900; color: #00f5d4; }
+  .scenario-label { font-size: 8pt; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3mm; }
+  .scenario-title { font-size: 11pt; font-weight: 700; color: #ffffff; margin-bottom: 2mm; }
+  .scenario-desc { font-size: 8.5pt; color: #94a3b8; line-height: 1.45; }
+
+  /* Final slide */
+  .principle-block {
+    background: rgba(0,245,212,0.07);
+    border: 1px solid rgba(0,245,212,0.25);
+    border-radius: 8px;
+    padding: 4mm 6mm;
+    margin-bottom: 4mm;
+  }
+  .principle-title { font-size: 12pt; font-weight: 700; color: #00f5d4; margin-bottom: 2mm; }
+  .principle-text { font-size: 9.5pt; color: #cbd5e1; line-height: 1.5; }
 </style>
 </head>
 <body>
 
-<!-- SLIDE 1: ТИТУЛЬНЫЙ -->
+<!-- ═══════════════════════════════════════════════
+     СЛАЙД 1 — ТИТУЛЬНЫЙ: «Без права на ошибку»
+═══════════════════════════════════════════════ -->
 <div class="slide title-slide">
-  <div style="margin-bottom: 6mm;">
-    <span class="team-badge" style="font-size: 13pt; padding: 6px 20px;">ЧЕМПИОНАТ НГГТИ 2026 // КЕЙС «БЕСПИЛОТНЫЙ КОРИДОР»</span>
-  </div>
   <div class="title-hero">
-    Интеллектуальный Диспетчерский Центр:<br>
-    <span>«Без права на ошибку»</span>
+    Без права на <span>ошибку</span>
   </div>
   <div class="title-subhero">
-    Автономная распределенная система ситуационного управления и диспетчеризации высокоскоростного беспилотного коридора
+    Интеллектуальный диспетчерский центр беспилотного коридора
   </div>
   <div class="title-meta-box">
-    <div class="title-meta-item">
-      <div class="title-meta-label">Команда разработки</div>
-      <div class="title-meta-value">VUPSEN Squad</div>
+    <div class="meta-item">
+      <div class="meta-label">Команда</div>
+      <div class="meta-value">VUPSEN Squad</div>
     </div>
-    <div class="title-meta-item">
-      <div class="title-meta-label">Архитектурный принцип</div>
-      <div class="title-meta-value">Zero-Network / Offline Determinism</div>
+    <div class="meta-item">
+      <div class="meta-label">Соревнование</div>
+      <div class="meta-value">IT Championship NGGTI 2026</div>
     </div>
-    <div class="title-meta-item">
-      <div class="title-meta-label">Быстродействие</div>
-      <div class="title-meta-value">17.39 мс / пакет (115x запас)</div>
+    <div class="meta-item">
+      <div class="meta-label">Средний балл</div>
+      <div class="meta-value">93.87 / 100</div>
     </div>
-    <div class="title-meta-item">
-      <div class="title-meta-label">Результат бенчмарка</div>
-      <div class="title-meta-value" style="color: #00f5d4;">88.90 / 100.0 (0 нарушений)</div>
+    <div class="meta-item">
+      <div class="meta-label">Safety-нарушений</div>
+      <div class="meta-value">0 из 2160 пакетов</div>
     </div>
   </div>
   <div class="slide-footer">
@@ -295,58 +232,140 @@ HTML_CONTENT = """<!DOCTYPE html>
   </div>
 </div>
 
-<!-- SLIDE 2: ПОТОКОВАЯ АРХИТЕКТУРА -->
+<!-- ═══════════════════════════════════════════════
+     СЛАЙД 2 — ЗАДАЧА: масштаб и условия
+═══════════════════════════════════════════════ -->
 <div class="slide">
   <div class="slide-header">
     <div>
-      <div class="slide-title">Потоковая архитектура и пайплайн реального времени</div>
-      <div class="slide-subtitle">Непрерывная детерминированная обработка потока наблюдений с субсекундным откликом</div>
+      <div class="slide-title">Задача</div>
+      <div class="slide-subtitle">Что нужно было решить — масштаб и ограничения</div>
     </div>
     <div class="team-badge">VUPSEN Squad</div>
   </div>
   <div class="content">
-    <div class="col-2">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">⚡ Принципы потокового конвейера (Pipeline)</div>
+    <div class="col">
+      <div class="card">
+        <div class="card-title">🛣️ Беспилотный коридор</div>
         <div class="card-body">
           <ul>
-            <li><strong>Интерфейс Unix-pipeline:</strong> чтение NDJSON пакетов из <code>sys.stdin</code>, мгновенная запись снимка решений в <code>sys.stdout</code> с немедленным сбросом (<code>flush</code>).</li>
-            <li><strong>Изоляция телеметрии:</strong> системные и диагностические логи направляются строго в <code>sys.stderr</code>, гарантируя 100% валидность JSON-потока.</li>
-            <li><strong>Детерминированное состояние (State Machine):</strong> модульный <code>SystemState</code> аккумулирует историю задержек, скользящие окна и статусы источников без сторонних БД.</li>
-            <li><strong>Zero-Overhead Memory Footprint:</strong> за счет эффективных хэш-таблиц и векторных справочников аллокация памяти составляет &lt; 85 МБ при лимите 16 ГБ.</li>
+            <li><strong>86 участков</strong> трассы — разные структуры, ограничения по скорости и тоннажу</li>
+            <li><strong>72 ВАТС</strong> — автономные грузовики, каждый с профилем ODD</li>
+            <li><strong>50 источников данных</strong> — камеры, детекторы, метеостанции, RSU, цифровой двойник</li>
+            <li><strong>4 хаба</strong> — начальные и конечные точки маршрутов</li>
+            <li><strong>10 безопасных стоянок</strong> — для экстренных остановок</li>
+            <li><strong>6 телеоператоров</strong> — дефицитный ресурс поддержки</li>
           </ul>
         </div>
       </div>
-      <div class="card" style="flex: 1;">
-        <div class="card-title">⏱️ Соблюдение временного регламента</div>
+      <div class="card">
+        <div class="card-title">⚡ Формат работы</div>
         <div class="card-body">
           <ul>
-            <li><strong>Лимит ТЗ:</strong> 2 000 мс (2.0 секунды) на пакет при такте поступления 5 секунд.</li>
-            <li><strong>Фактическое среднее время:</strong> <strong>17.39 мс</strong> (в 115 раз быстрее предельного норматива).</li>
-            <li><strong>Пиковое время ответа:</strong> &lt; 45 мс даже при масштабных инцидентах и перемаршрутизации всего флота из 72 ВАТС.</li>
-            <li><strong>Пропускная способность:</strong> расчетная производительность свыше 55 пакетов/сек на 1 CPU ядре.</li>
+            <li>Каждые <strong>5 секунд</strong> — поток событий (400–600 событий)</li>
+            <li>Ответ необходим за <strong>≤ 2000 мс</strong></li>
+            <li>Работа <strong>без интернета</strong> — полностью оффлайн</li>
+            <li>stdin → JSON-решение → stdout (Unix pipeline)</li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="col-2">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">🔄 Пошаговый цикл обработки пакета (5-секундный такт)</div>
-        <div class="card-body" style="font-size: 10pt;">
-          <div style="background: rgba(11, 19, 43, 0.8); border-left: 3px solid #00f5d4; padding: 6px 12px; margin-bottom: 6px; border-radius: 4px;">
-            <strong style="color: #00f5d4;">1. Ingest & Telemetry Sync:</strong> распаковка событий, обновление статусов 50 источников, расчет задержек доставки.
-          </div>
-          <div style="background: rgba(11, 19, 43, 0.8); border-left: 3px solid #48cae4; padding: 6px 12px; margin-bottom: 6px; border-radius: 4px;">
-            <strong style="color: #48cae4;">2. Sensor Health & Trust:</strong> выявление отказов источников, пересчет Trust Score, отсечение византийских данных.
-          </div>
-          <div style="background: rgba(11, 19, 43, 0.8); border-left: 3px solid #00f5d4; padding: 6px 12px; margin-bottom: 6px; border-radius: 4px;">
-            <strong style="color: #00f5d4;">3. Segment State Estimation:</strong> взвешенная оценка состояния всех 86 сегментов (OPEN/CONGESTED/CLOSED).
-          </div>
-          <div style="background: rgba(11, 19, 43, 0.8); border-left: 3px solid #ff6b6b; padding: 6px 12px; margin-bottom: 6px; border-radius: 4px;">
-            <strong style="color: #ff6b6b;">4. ODD Engine & Safety Guard:</strong> пространственный анализ условий для 72 ВАТС, пресечение автономного движения вне ODD.
-          </div>
-          <div style="background: rgba(11, 19, 43, 0.8); border-left: 3px solid #00f5d4; padding: 6px 12px; border-radius: 4px;">
-            <strong style="color: #00f5d4;">5. Dispatch & Action Generation:</strong> динамический Dijkstra, распределение 6 телеоператоров и стоянок, экспорт решения.
+    <div class="col">
+      <div class="card">
+        <div class="card-title">📋 Что система должна выдавать каждые 5 сек</div>
+        <div class="card-body">
+          <ul>
+            <li>Состояние <strong>каждого из 86 сегментов</strong>: OPEN / CONGESTED / PARTIAL_BLOCK / CLOSED</li>
+            <li>Оценка здоровья <strong>каждого из 50 источников</strong>: OK / DEGRADED / FAILED</li>
+            <li>ODD-статус <strong>каждого из 72 ВАТС</strong>: COMPLIANT / VIOLATED</li>
+            <li>Команда действия <strong>каждому грузовику</strong>: CONTINUE / REROUTE / SAFE_STOP / HOLD</li>
+          </ul>
+        </div>
+      </div>
+      <div class="stats-grid" style="grid-template-columns: repeat(3,1fr); gap:4mm; margin-top:2mm;">
+        <div class="stat-box">
+          <div class="stat-value">86</div>
+          <div class="stat-label">Сегментов</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">72</div>
+          <div class="stat-label">ВАТС</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">50</div>
+          <div class="stat-label">Источников</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>IT Championship NGGTI 2026 // Задача</span>
+    <span>Команда VUPSEN Squad</span>
+    <span>Слайд 2 из 7</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     СЛАЙД 3 — АРХИТЕКТУРА: принципы и поток данных
+═══════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="slide-header">
+    <div>
+      <div class="slide-title">Архитектурные принципы</div>
+      <div class="slide-subtitle">На чём строится система — без компромиссов</div>
+    </div>
+    <div class="team-badge">VUPSEN Squad</div>
+  </div>
+  <div class="content">
+    <div class="col">
+      <div class="card">
+        <div class="card-title">🔌 Принцип 1: Полная автономность</div>
+        <div class="card-body">
+          Никаких облаков и внешних API во время работы. Все справочные данные — карта, профили ВАТС, правила ODD — загружаются <strong>один раз при старте</strong>. Дальше система живёт только на входящем потоке.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔢 Принцип 2: Детерминизм</div>
+        <div class="card-body">
+          Никаких нейросетей в критических решениях. Одинаковый вход — всегда одинаковый выход. <strong>Алгоритм Дейкстры, конечные автоматы, жёсткие правила</strong>. Решения объяснимы и сертифицируемы.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🛡️ Принцип 3: Безопасность в архитектуре</div>
+        <div class="card-body">
+          Safety Gate стоит последним в цепочке. Ни одна команда не обходит его. CONTINUE при нарушении ODD <strong>физически невозможна</strong> в коде — это гарантия нулевых нарушений.
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card" style="flex:1;">
+        <div class="card-title">⚙️ Поток обработки пакета — 8 шагов</div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:4px;margin-top:2mm;">
+            <div class="pipeline">
+              <div class="pipe-node">stdin</div>
+              <div class="pipe-arrow">→</div>
+              <div class="pipe-node">json.loads</div>
+              <div class="pipe-arrow">→</div>
+              <div class="pipe-node">process_packet()</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:3px;padding:0 0 0 6mm;font-size:9pt;color:#94a3b8;">
+              <div>① <span style="color:#00f5d4;">SourceHealthTracker</span> — оценка 50 источников, trust_map</div>
+              <div>② <span style="color:#00f5d4;">SegmentStateEstimator</span> — классификация 86 сегментов</div>
+              <div>③ <span style="color:#00f5d4;">ODDEngine.update()</span> — погода, доступность RSU</div>
+              <div>④ <span style="color:#00f5d4;">HubManager.update()</span> — загрузка 4 хабов</div>
+              <div>⑤ <span style="color:#00f5d4;">vehicles_state update</span> — координаты 72 ВАТС</div>
+              <div>⑥ <span style="color:#00f5d4;">ODDEngine.evaluate_all()</span> — ODD для каждой машины</div>
+              <div>⑦ <span style="color:#00f5d4;">CorridorRouter.plan()</span> — маршруты и действия</div>
+              <div>⑧ <span style="color:#ff6b6b;font-weight:700;">SafetyGuard.arbitrate()</span> — финальный арбитраж</div>
+            </div>
+            <div class="pipeline" style="margin-top:4px;">
+              <div class="pipe-node">stdout</div>
+              <div class="pipe-arrow">←</div>
+              <div class="pipe-node">json.dumps + flush</div>
+              <div class="pipe-arrow">←</div>
+              <div class="pipe-node">снимок решений</div>
+            </div>
           </div>
         </div>
       </div>
@@ -355,331 +374,200 @@ HTML_CONTENT = """<!DOCTYPE html>
   <div class="slide-footer">
     <span>IT Championship NGGTI 2026 // Архитектура</span>
     <span>Команда VUPSEN Squad</span>
-    <span>Слайд 2 из 7</span>
-  </div>
-</div>
-
-<!-- SLIDE 3: ДОСТОВЕРНОСТЬ ИСТОЧНИКОВ -->
-<div class="slide">
-  <div class="slide-header">
-    <div>
-      <div class="slide-title">Оценка достоверности источников и выявление сбоев</div>
-      <div class="slide-subtitle">Мультисенсорный мониторинг 50 источников инфраструктуры и фильтрация аномалий</div>
-    </div>
-    <div class="team-badge">VUPSEN Squad</div>
-  </div>
-  <div class="content">
-    <div class="col-2">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">🔍 Классификатор 6 типов отказов источников</div>
-        <div class="card-body">
-          <table class="data-table">
-            <thead>
-              <tr><th>Тип сбоя</th><th>Критерий детекции</th><th>Действие системы</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>OUTAGE</strong></td>
-                <td>NO_HEARTBEAT или пропуск &gt; 3 тактов</td>
-                <td>Изоляция источника, trust = 0.0</td>
-              </tr>
-              <tr>
-                <td><strong>PACKET_LOSS</strong></td>
-                <td>Потеря пакетов телеметрии &ge; 15%</td>
-                <td>Снижение trust, блокировка V2X</td>
-              </tr>
-              <tr>
-                <td><strong>DELAY</strong></td>
-                <td>Средняя задержка доставки &ge; 6.0 с</td>
-                <td>trust = 0.4, пессимизация веса</td>
-              </tr>
-              <tr>
-                <td><strong>TIME_SKEW</strong></td>
-                <td>Рассинхронизация часов |&Delta;t| &ge; 1.0 с</td>
-                <td>Коррекция меток времени</td>
-              </tr>
-              <tr>
-                <td><strong>FREEZE</strong></td>
-                <td>Залипание значений скорости/потока &gt; 6 шагов</td>
-                <td>Игнорирование телеметрии</td>
-              </tr>
-              <tr>
-                <td><strong>STALE</strong></td>
-                <td>Устаревание расчетных данных DT-CORE &ge; 25 с</td>
-                <td>Переход на прямое сенсорное чтение</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="col-2">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">🛡️ Динамический Trust Score и защита от Византийских сбоев</div>
-        <div class="card-body">
-          <ul>
-            <li><strong>Индекс доверия (Trust Score &isin; [0.0, 1.0]):</strong> непрерывно дисконтируется при детекции аномалий и плавно восстанавливается при стабильном получении данных.</li>
-            <li><strong>Фильтрация ложных инцидентов (False Incident Defense):</strong> аномальные отчеты о «закрытии полосы» от одного детектора перепроверяются по соседним сенсорам и камерам. Ложный сигнал отсекается до перемаршрутизации флота.</li>
-            <li><strong>Связка RSU и ODD:</strong> деградация придорожного модуля (RSU) мгновенно аннулирует V2X-доступность в зоне его действия, переводя зависимые ВАТС в защищенный режим.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card" style="flex: 1;">
-        <div class="card-title">🎯 Калибровка вероятностей (Confidence Calibration)</div>
-        <div class="card-body">
-          <ul>
-            <li>Байесовское согласование физических датчиков и экспертных оценок.</li>
-            <li>Минимизация Brier Score (MSE вероятностей) по всем 86 сегментам.</li>
-            <li>Высокая уверенность (0.95–1.00) при консенсусе нескольких независимых источников.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span>IT Championship NGGTI 2026 // Источники и доверие</span>
-    <span>Команда VUPSEN Squad</span>
     <span>Слайд 3 из 7</span>
   </div>
 </div>
 
-<!-- SLIDE 4: ODD И SAFETY GUARD -->
+<!-- ═══════════════════════════════════════════════
+     СЛАЙД 4 — 6 МОДУЛЕЙ системы
+═══════════════════════════════════════════════ -->
 <div class="slide">
   <div class="slide-header">
     <div>
-      <div class="slide-title">Контур безопасности (Safety Guard) и Движок ODD</div>
-      <div class="slide-subtitle">Бескомпромиссная защита от инцидентов: 0 критических нарушений на 2 160 пакетах</div>
+      <div class="slide-title">6 модулей системы</div>
+      <div class="slide-subtitle">Каждый — отдельный слой ответственности</div>
     </div>
     <div class="team-badge">VUPSEN Squad</div>
   </div>
-  <div class="content">
-    <div class="col-2">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">📊 Матрица профилей ODD (A, B, C, D)</div>
-        <div class="card-body">
-          <table class="data-table">
-            <thead>
-              <tr><th>Профиль</th><th>Видимость</th><th>Осадки</th><th>V2X</th><th>Инфраструктура</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>ODD-A (Флагман)</strong></td>
-                <td>&ge; 100 м</td>
-                <td>До уровня 2</td>
-                <td>Желателен</td>
-                <td>Все сегменты, тоннели, эстакады</td>
-              </tr>
-              <tr>
-                <td><strong>ODD-B (V2X-зависимый)</strong></td>
-                <td>&ge; 200 м</td>
-                <td>До уровня 2</td>
-                <td>Обязателен</td>
-                <td>Только с активным RSU</td>
-              </tr>
-              <tr>
-                <td><strong>ODD-C (Базовый)</strong></td>
-                <td>&ge; 300 м</td>
-                <td>Уровень 0 (сухо)</td>
-                <td>Не критичен</td>
-                <td>Запрещены тоннели и мосты</td>
-              </tr>
-              <tr>
-                <td><strong>ODD-D (Особый)</strong></td>
-                <td>&ge; 150 м</td>
-                <td>До уровня 1</td>
-                <td>Обязателен</td>
-                <td>Все открытые сегменты</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+  <div style="flex:1; display:flex; flex-direction:column; gap:0;">
+    <div class="mod-grid" style="flex:1;">
+      <div class="mod-card">
+        <div class="mod-num">Модуль 1 • sources/health.py</div>
+        <div class="mod-name">🔍 Мониторинг источников</div>
+        <div class="mod-desc">Отслеживает здоровье 50 датчиков. Выявляет 6 типов сбоёв: OUTAGE, PACKET_LOSS, DELAY, TIME_SKEW, FREEZE, STALE. Присваивает Trust Score (0→1). Источники с trust &lt; 0.3 игнорируются.</div>
       </div>
-      <div class="card" style="flex: 1;">
-        <div class="card-title">🌧️ Пространственная группировка метеоусловий</div>
-        <div class="card-body">
-          <ul>
-            <li><strong>Агрегация по магистральным группам:</strong> метеостанции объединены по коридорам (MAIN: WX-01..05, 08; NORTH: WX-06; SOUTH: WX-07).</li>
-            <li><strong>Консервативная оценка:</strong> ухудшение видимости (туман) на одном участке группы мгновенно учитывается для всех приближающихся сегментов.</li>
-          </ul>
-        </div>
+      <div class="mod-card">
+        <div class="mod-num">Модуль 2 • network/estimator.py</div>
+        <div class="mod-name">🗺️ Оценщик сегментов</div>
+        <div class="mod-desc">Классифицирует 86 участков. Приоритет: физические детекторы → V2X ROAD_STATE → цифровой двойник → скорость ВАТС. Порог CONGESTED: очередь ≥ 25 м И скорость ≤ 65 км/ч.</div>
       </div>
-    </div>
-    <div class="col-2">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">🛡️ Safety Gate: Безопасность превыше всего</div>
-        <div class="card-body">
-          <ul>
-            <li><strong>Категорический запрет:</strong> автономное движение (<code>CONTINUE</code>) вне пределов ODD <em>строго запрещено</em> без активной сессии удаленной поддержки.</li>
-            <li><strong>Защита от нулевого балла:</strong> алгоритм исключает любые критические эпизоды ТЗ, сохраняя максимальный скоринг решения.</li>
-            <li><strong>Многоуровневая эскалация действий:</strong>
-              <div style="margin-top: 4px; font-size: 9.5pt;">
-                1. При нарушении ODD &rarr; запрос <code>REMOTE_ASSIST</code>.<br>
-                2. Если пул операторов исчерпан &rarr; маневр минимального риска <code>SAFE_STOP</code>.<br>
-                3. Если путь заблокирован или экстренная угроза &rarr; <code>PULL_OVER</code> / <code>STOP</code>.
-              </div>
-            </li>
-          </ul>
-        </div>
+      <div class="mod-card">
+        <div class="mod-num">Модуль 3 • network/graph.py</div>
+        <div class="mod-name">📡 Граф и маршрутизация</div>
+        <div class="mod-desc">Ориентированный граф из 86 сегментов и 34 узлов. Алгоритм Дейкстры с весовыми коэффициентами: CONGESTED ×2.2, PARTIAL_BLOCK ×4.0. BFS для поиска ближайшей стоянки.</div>
       </div>
-      <div class="card" style="flex: 1;">
-        <div class="card-title">⚖️ Приоритетный арбитраж полезности грузов (Utility)</div>
-        <div class="card-body">
-          <ul>
-            <li><strong>Опасные (HAZARDOUS) и скоропортящиеся (PERISHABLE):</strong> наивысший приоритет при дефиците сессий телеоператоров и мест на стоянках.</li>
-            <li><strong>HIGH &gt; NORMAL:</strong> минимизация суммарных коммерческих потерь логистического коридора при форс-мажорах.</li>
-          </ul>
-        </div>
+      <div class="mod-card">
+        <div class="mod-num">Модуль 4 • safety/odd_engine.py</div>
+        <div class="mod-name">⚠️ Движок ODD</div>
+        <div class="mod-desc">Проверяет 7 условий для каждой из 72 машин: видимость, осадки, GNSS, V2X, структура, тоннаж, возраст карты. 4 профиля: ODD-A/B/C/D. Консервативная оценка по минимуму в зоне.</div>
+      </div>
+      <div class="mod-card">
+        <div class="mod-num">Модуль 5 • safety/guard.py</div>
+        <div class="mod-name">🛡️ Safety Gate</div>
+        <div class="mod-desc">Финальный арбитр. При нарушении ODD: если есть оператор → LIMIT_SPEED 40 км/ч. Нет оператора → SAFE_STOP. Нет стоянки → HOLD. CONTINUE при нарушении ODD невозможен.</div>
+      </div>
+      <div class="mod-card">
+        <div class="mod-num">Модуль 6 • dispatch/resource_manager.py</div>
+        <div class="mod-name">📋 Диспетчер ресурсов</div>
+        <div class="mod-desc">RemoteSupportPool: ≤ 6 операторов, приоритет по (6 − cargo_priority)×20 + штраф/мин. SafeStopManager: 10 стоянок, проверка вместимости и тоннажа. Удержание сессий между шагами.</div>
       </div>
     </div>
   </div>
   <div class="slide-footer">
-    <span>IT Championship NGGTI 2026 // Контур безопасности</span>
+    <span>IT Championship NGGTI 2026 // 6 модулей</span>
     <span>Команда VUPSEN Squad</span>
     <span>Слайд 4 из 7</span>
   </div>
 </div>
 
-<!-- SLIDE 5: МАРШРУТИЗАЦИЯ И РЕСУРСЫ -->
+<!-- ═══════════════════════════════════════════════
+     СЛАЙД 5 — СЦЕНАРИИ: система в реальных условиях
+═══════════════════════════════════════════════ -->
 <div class="slide">
   <div class="slide-header">
     <div>
-      <div class="slide-title">Динамическая маршрутизация и диспетчеризация ресурсов</div>
-      <div class="slide-subtitle">Оптимальное управление ограниченными ресурсами коридора без образования узких мест</div>
+      <div class="slide-title">Система в реальных условиях</div>
+      <div class="slide-subtitle">Три сложных сценария — как система реагирует</div>
     </div>
     <div class="team-badge">VUPSEN Squad</div>
   </div>
-  <div class="content">
-    <div class="col-3">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">🗺️ Динамический роутер (Router)</div>
-        <div class="card-body">
-          <ul>
-            <li><strong>Адаптивный алгоритм Дейкстры:</strong> мгновенный поиск кратчайшего пути с учетом весовых ограничений и закрытых сегментов.</li>
-            <li><strong>Учет ODD-C:</strong> автоматический обход тоннелей для техники профиля C.</li>
-            <li><strong>Action Stability Debounce:</strong> предотвращение «дребезга» действий. Изменение маневра фиксируется только при устойчивом изменении условий.</li>
-          </ul>
-        </div>
+  <div style="flex:1; display:flex; flex-direction:column; gap:5mm;">
+    <div class="scenario-grid">
+      <div class="scenario-card">
+        <div class="scenario-label">TRAIN-001 • Штатный режим</div>
+        <div class="scenario-score">100.0</div>
+        <div class="scenario-title">Идеальные условия</div>
+        <div class="scenario-desc">Все датчики работают, видимость хорошая. Система правильно классифицировала все 540 пакетов. F1 по каждому классу = 1.0. Алгоритм Дейкстры выбирает оптимальные маршруты без единой ошибки.</div>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-label">TRAIN-003 • Густой туман</div>
+        <div class="scenario-score">94.17</div>
+        <div class="scenario-title">Видимость до 60 м, перекрытия</div>
+        <div class="scenario-desc">Ключевая проблема: в тумане машины едут медленно — старый порог давал ложные CONGESTED. Откалибровали: пробка только при очереди ≥ 25 м И скорости ≤ 65 км/ч одновременно. Safety Gate направил всех ODD-нарушителей на стоянки. 0 критических нарушений.</div>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-label">TRAIN-004 • Массовое ДТП</div>
+        <div class="scenario-score">89.01</div>
+        <div class="scenario-title">Одновременные перекрытия + дефицит</div>
+        <div class="scenario-desc">Несколько закрытых участков, 6 операторов разобраны — приходят новые ODD-нарушения. Система: опасные грузы получают оператора (приоритет 1), остальные — на стоянки. Оставшиеся без стоянки — HOLD на месте. Ни один грузовик не поехал без прикрытия.</div>
       </div>
     </div>
-    <div class="col-3">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">🎮 Пул удаленной поддержки (&le; 6)</div>
-        <div class="card-body">
-          <ul>
-            <li><strong>Лимит операторов:</strong> строго не более 6 активных сессий на весь коридор одновременно.</li>
-            <li><strong>Стабилизация сессий:</strong> удержание сессии минимум 3 шага после назначения для завершения телеманевра.</li>
-            <li><strong>Арбитраж:</strong> освобождение сессии при нормализации ODD или достижении безопасной стоянки.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="col-3">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">🛑 Стоянки Safe Stops и Хабы</div>
-        <div class="card-body">
-          <ul>
-            <li><strong>Safe Stops (SS-01..10):</strong> учет вместимости машиномест и лимитов нагрузки на дорожное полотно (тоннаж).</li>
-            <li><strong>Хабы (HUB-01..04):</strong> мониторинг загрузки терминалов.</li>
-            <li><strong>Гейтинг выезда (HOLD):</strong> удержание ВАТС на хабе при заторах на выездных рампах или переполнении хаба назначения.</li>
-          </ul>
+    <div style="display:flex; gap:5mm;">
+      <div class="card" style="flex:1;">
+        <div class="card-title">🔑 Ключевая оптимизация, поднявшая балл +4.97</div>
+        <div class="card-body" style="display:flex;gap:6mm;">
+          <div style="flex:1;">
+            <strong style="color:#00f5d4;">Было (88.90):</strong> Порог CONGESTED — только скорость ≤ 80 км/ч. В тумане система видела пробки везде → F1_CONGESTED ≈ 0 → −25 баллов
+          </div>
+          <div style="flex:1;">
+            <strong style="color:#00f5d4;">Стало (93.87):</strong> Два условия одновременно: очередь ≥ 25 м И скорость ≤ 65 км/ч. Плюс: добавили чтение V2X ROAD_STATE от грузовиков как дополнительного источника
+          </div>
         </div>
       </div>
     </div>
   </div>
   <div class="slide-footer">
-    <span>IT Championship NGGTI 2026 // Маршрутизация и ресурсы</span>
+    <span>IT Championship NGGTI 2026 // Сценарии</span>
     <span>Команда VUPSEN Squad</span>
     <span>Слайд 5 из 7</span>
   </div>
 </div>
 
-<!-- SLIDE 6: БЕНЧМАРК И РЕЗУЛЬТАТЫ -->
+<!-- ═══════════════════════════════════════════════
+     СЛАЙД 6 — РЕЗУЛЬТАТЫ
+═══════════════════════════════════════════════ -->
 <div class="slide">
   <div class="slide-header">
     <div>
-      <div class="slide-title">Результаты бенчмаркинга и валидация на сценариях</div>
-      <div class="slide-subtitle">Высокие баллы на 2 160 пакетах обучения и успешный инференс открытых сценариев PUBLIC</div>
+      <div class="slide-title">Результаты бенчмарка</div>
+      <div class="slide-subtitle">2160 пакетов • 4 сценария • Macro F1</div>
     </div>
     <div class="team-badge">VUPSEN Squad</div>
   </div>
-  <div class="stats-grid">
-    <div class="stat-box">
-      <div class="stat-value highlight-green">88.90</div>
-      <div class="stat-label">Средний балл TRAIN (DoD &gt; 75.0)</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-value highlight-green">0</div>
-      <div class="stat-label">Критических нарушений Safety Gate</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-value">17.39 мс</div>
-      <div class="stat-label">Среднее время ответа (Лимит 2000 мс)</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-value">54 / 54</div>
-      <div class="stat-label">Модульных тестов пройдено (100%)</div>
-    </div>
-  </div>
   <div class="content">
-    <div class="col-2">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">📈 Детализация баллов по сценариям TRAIN</div>
+    <div class="col">
+      <div class="stats-grid" style="grid-template-columns:repeat(2,1fr);">
+        <div class="stat-box">
+          <div class="stat-value green">93.87</div>
+          <div class="stat-label">Средний балл / 100</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value green">0</div>
+          <div class="stat-label">Критических нарушений</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value green">11.49</div>
+          <div class="stat-label">мс — среднее время</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value green">174×</div>
+          <div class="stat-label">Запас до лимита</div>
+        </div>
+      </div>
+      <div class="card" style="flex:1;">
+        <div class="card-title">📊 По сценариям</div>
         <div class="card-body">
           <table class="data-table">
-            <thead>
-              <tr><th>Сценарий</th><th>Пакеты</th><th>Инциденты</th><th>Балл</th><th>Крит. ошибки</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>TRAIN-001</strong></td>
-                <td>540</td>
-                <td>Штатный режим</td>
-                <td style="color: #00f5d4; font-weight: bold;">100.00 / 100</td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td><strong>TRAIN-002</strong></td>
-                <td>540</td>
-                <td>Отказы сенсоров, сбои связи</td>
-                <td style="color: #00f5d4; font-weight: bold;">83.76 / 100</td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td><strong>TRAIN-003</strong></td>
-                <td>540</td>
-                <td>Густой туман, перекрытия полос</td>
-                <td style="color: #00f5d4; font-weight: bold;">86.64 / 100</td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td><strong>TRAIN-004</strong></td>
-                <td>540</td>
-                <td>Масштабное ДТП, дефицит ресурсов</td>
-                <td style="color: #00f5d4; font-weight: bold;">85.21 / 100</td>
-                <td>0</td>
-              </tr>
-              <tr style="background: rgba(0, 245, 212, 0.1);">
-                <td><strong>ИТОГО (Ср.)</strong></td>
-                <td><strong>2 160</strong></td>
-                <td><strong>Все типы аномалий</strong></td>
-                <td style="color: #00f5d4; font-weight: 900;">88.90 / 100</td>
-                <td><strong>0 нарушений</strong></td>
-              </tr>
-            </tbody>
+            <tr>
+              <th>Сценарий</th>
+              <th>Условия</th>
+              <th>Балл</th>
+            </tr>
+            <tr>
+              <td>TRAIN-001</td>
+              <td>Штатный режим</td>
+              <td class="good">100.00</td>
+            </tr>
+            <tr>
+              <td>TRAIN-002</td>
+              <td>Отказы датчиков, связь</td>
+              <td class="good">92.29</td>
+            </tr>
+            <tr>
+              <td>TRAIN-003</td>
+              <td>Густой туман, перекрытия</td>
+              <td class="good">94.17</td>
+            </tr>
+            <tr>
+              <td>TRAIN-004</td>
+              <td>ДТП, дефицит ресурсов</td>
+              <td class="good">89.01</td>
+            </tr>
+            <tr style="border-top: 2px solid rgba(0,245,212,0.4);">
+              <td><strong>Средний</strong></td>
+              <td></td>
+              <td class="good"><strong>93.87</strong></td>
+            </tr>
           </table>
         </div>
       </div>
     </div>
-    <div class="col-2">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">🚀 Готовность к открытым сценариям PUBLIC</div>
+    <div class="col">
+      <div class="card" style="flex:1;">
+        <div class="card-title">🔧 Технические характеристики</div>
         <div class="card-body">
-          <ul>
-            <li><strong>PUBLIC-101 (540 пакетов):</strong> полный прогон выполнен за 9.98 с (18.49 мс/пакет). Сформирован сжатый архив <code>PUBLIC-101.result.ndjson.gz</code> (122.0 КБ).</li>
-            <li><strong>PUBLIC-102 (720 пакетов):</strong> полный прогон выполнен за 15.64 с (21.72 мс/пакет). Сформирован сжатый архив <code>PUBLIC-102.result.ndjson.gz</code> (168.6 КБ).</li>
-            <li><strong>100% валидация:</strong> каждый ответ проверен валидатором Draft2020-12 по схеме <code>03_decision.schema.json</code>.</li>
-            <li><strong>Полная воспроизводимость:</strong> детерминированный запуск гарантирует совпадение байт-в-байт.</li>
-          </ul>
+          <table class="data-table">
+            <tr><th>Параметр</th><th>Значение</th></tr>
+            <tr><td>Язык</td><td>Python 3.12+</td></tr>
+            <tr><td>Внешние зависимости</td><td>jsonschema, numpy</td></tr>
+            <tr><td>Размер Docker-образа</td><td>188 МБ</td></tr>
+            <tr><td>Размер архива сабмишна</td><td>47.4 МБ</td></tr>
+            <tr><td>Время ответа (avg)</td><td class="good">11.49 мс</td></tr>
+            <tr><td>Лимит по условиям</td><td>2000 мс</td></tr>
+            <tr><td>Запас по времени</td><td class="good">174× быстрее</td></tr>
+            <tr><td>Автоматических тестов</td><td class="good">54 — 100% OK</td></tr>
+            <tr><td>Критических нарушений</td><td class="good">0 из 2160</td></tr>
+          </table>
         </div>
       </div>
     </div>
@@ -691,50 +579,44 @@ HTML_CONTENT = """<!DOCTYPE html>
   </div>
 </div>
 
-<!-- SLIDE 7: ЗАКЛЮЧЕНИЕ И ЦЕННОСТЬ -->
+<!-- ═══════════════════════════════════════════════
+     СЛАЙД 7 — ЗАКЛЮЧЕНИЕ: промышленная ценность
+═══════════════════════════════════════════════ -->
 <div class="slide">
   <div class="slide-header">
     <div>
-      <div class="slide-title">Заключение, прикладная ценность и внедрение</div>
-      <div class="slide-subtitle">Готовое индустриальное решение для федеральных беспилотных логистических коридоров</div>
+      <div class="slide-title">Итог: безопасность встроена</div>
+      <div class="slide-subtitle">Не прикручена сверху — встроена в архитектуру</div>
     </div>
     <div class="team-badge">VUPSEN Squad</div>
   </div>
   <div class="content">
-    <div class="col-3">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">📦 Промышленная упаковка</div>
-        <div class="card-body">
-          <ul>
-            <li><strong>Автономный Docker-контейнер:</strong> базовый образ <code>python:3.11-slim</code>, размер &lt; 200 МБ.</li>
-            <li><strong>Zero-Network:</strong> не требует подключения к Интернету, полностью работает с флагом <code>--network none</code>.</li>
-            <li><strong>Соответствие разделу 17 ТЗ:</strong> успешный экспорт в <code>solution-image.tar</code> с тегом <code>corridor-solution:final</code>.</li>
-          </ul>
-        </div>
+    <div class="col">
+      <div class="principle-block">
+        <div class="principle-title">🏗️ Детерминированные алгоритмы</div>
+        <div class="principle-text">Никаких нейросетей в критических решениях. Дейкстра, конечные автоматы, жёсткие правила. Каждое решение объяснимо — можно проверить, сертифицировать и объяснить любому регулятору.</div>
+      </div>
+      <div class="principle-block">
+        <div class="principle-title">🛡️ Safety-first архитектура</div>
+        <div class="principle-text">Safety Gate — физически последний барьер. CONTINUE при нарушении ODD невозможна в коде. Доказано на 2160 пакетах: 0 критических нарушений при любых условиях — тумане, отказах, авариях.</div>
+      </div>
+      <div class="principle-block">
+        <div class="principle-title">📈 Готово к индустриальному применению</div>
+        <div class="principle-text">Docker-контейнер, 54 автотеста, GitHub CI, 174× запас по времени. Беспилотные коридоры придут только с доверием общества — а доверие строится на предсказуемой, объяснимой системе.</div>
       </div>
     </div>
-    <div class="col-3">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">💡 Прикладная ценность</div>
-        <div class="card-body">
-          <ul>
-            <li><strong>Сокращение простоев флота:</strong> предиктивная перемаршрутизация снижает задержки доставки на 28%.</li>
-            <li><strong>Оптимизация штата телеоператоров:</strong> строгое ограничение пула 6 сессиями за счет динамической приоритизации.</li>
-            <li><strong>Защита дорожной инфраструктуры:</strong> предотвращение разрушения полотна тяжелыми автопоездами.</li>
-          </ul>
+    <div class="col" style="justify-content:center; align-items:center;">
+      <div style="text-align:center; padding:8mm;">
+        <div style="font-size:52pt; font-weight:900; color:#00f5d4; line-height:1;">93.87</div>
+        <div style="font-size:14pt; color:#94a3b8; margin:2mm 0 6mm;">средний балл из 100</div>
+        <div style="font-size:36pt; font-weight:900; color:#ff6b6b; line-height:1;">0</div>
+        <div style="font-size:14pt; color:#94a3b8; margin:2mm 0 6mm;">критических нарушений</div>
+        <div style="font-size:28pt; font-weight:900; color:#48cae4; line-height:1;">174×</div>
+        <div style="font-size:14pt; color:#94a3b8; margin:2mm 0 8mm;">быстрее лимита</div>
+        <div style="font-size:13pt; color:#ffffff; font-weight:700; font-style:italic;">
+          «Без права на ошибку»
         </div>
-      </div>
-    </div>
-    <div class="col-3">
-      <div class="card" style="flex: 1;">
-        <div class="card-title">🌟 Масштабируемость</div>
-        <div class="card-body">
-          <ul>
-            <li><strong>Универсальный граф:</strong> легкая адаптация под любые автомагистрали (М-11, М-12, ЦКАД) через замену reference CSV.</li>
-            <li><strong>Стандарты и ГОСТ:</strong> полная совместимость с V2X протоколами и телематическими стандартами РФ.</li>
-            <li><strong>Команда «VUPSEN Squad»:</strong> решение готово к промышленной эксплуатации без доработок.</li>
-          </ul>
-        </div>
+        <div style="font-size:10pt; color:#48cae4; margin-top:2mm;">— VUPSEN Squad, IT Championship NGGTI 2026</div>
       </div>
     </div>
   </div>
@@ -778,12 +660,8 @@ def main() -> None:
     # Verify page count
     print("🔍 Checking PDF page count...")
     try:
-        # Check via python or pdfinfo or gs
         gs_cmd = [
-            "gs",
-            "-q",
-            "-dNODISPLAY",
-            "-c",
+            "gs", "-q", "-dNODISPLAY", "-c",
             f"({pdf_file}) (r) file runpdfbegin pdfpagecount = quit",
         ]
         gs_res = subprocess.run(gs_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
