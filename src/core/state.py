@@ -9,6 +9,7 @@ from src.network.estimator import SegmentStateEstimator
 from src.network.router import CorridorRouter
 from src.safety.odd_engine import ODDEngine
 from src.safety.guard import SafetyGuard
+from src.sources.health import SourceHealthTracker
 
 
 class SystemState:
@@ -32,9 +33,11 @@ class SystemState:
         self.router = CorridorRouter(self.graph, self.ref)
         self.odd_engine = ODDEngine(self.ref)
         self.safety_guard = SafetyGuard(self.graph, self.ref)
+        self.source_tracker = SourceHealthTracker(self.ref)
 
-        # Segment estimates cache
+        # Cached estimates
         self.latest_segment_estimates: List[Dict[str, Any]] = []
+        self.latest_source_assessments: List[Dict[str, Any]] = []
 
         # Vehicles state tracking
         self.vehicles_last_seen: Dict[str, Dict[str, Any]] = {}
@@ -58,35 +61,29 @@ class SystemState:
                 "last_event_time": None,
             }
 
-        # Infrastructure sources state: source_id -> assessment dict
-        self.source_assessments: Dict[str, Dict[str, Any]] = {}
-        for src_id in self.ref.source_ids:
-            self.source_assessments[src_id] = {
-                "source_id": src_id,
-                "status": "OK",
-                "trust_score": 1.0,
-                "confidence": 1.0,
-                "fault_types": [],
-            }
-
     def update_from_events(self, events: List[Dict[str, Any]]) -> None:
         """
         Process observation events in the current packet.
         Updates internal tracking for telemetry and sensor health.
         """
-        # 1. Update segment state estimates via estimator
+        # 1. Update infrastructure source health and get dynamic trust scores
+        self.latest_source_assessments = self.source_tracker.process_step(
+            step_index=self.step_index,
+            events=events,
+        )
+        trust_map = self.source_tracker.get_trust_map()
+
+        # 2. Update segment state estimates via estimator using verified trust map
         self.latest_segment_estimates = self.estimator.process_step(
             step_index=self.step_index,
             events=events,
-            source_trust={
-                s: d["trust_score"] for s, d in self.source_assessments.items()
-            },
+            source_trust=trust_map,
         )
 
-        # 2. Update environmental observations (weather & RSU)
+        # 3. Update environmental observations (weather & RSU)
         self.odd_engine.update_from_events(events)
 
-        # 3. Track vehicle telemetry
+        # 4. Track vehicle telemetry
         for ev in events:
             ev_type = ev.get("event_type")
 
@@ -124,16 +121,9 @@ class SystemState:
         }
 
         # 2. Source assessments for all 50 infrastructure sources
-        source_assessments = []
-        for src_id in self.ref.source_ids:
-            src_info = self.source_assessments.get(src_id, {})
-            source_assessments.append({
-                "source_id": src_id,
-                "status": src_info.get("status", "OK"),
-                "trust_score": float(src_info.get("trust_score", 1.0)),
-                "confidence": float(src_info.get("confidence", 1.0)),
-                "fault_types": src_info.get("fault_types", []),
-            })
+        source_assessments = self.latest_source_assessments
+        if not source_assessments:
+            source_assessments = self.source_tracker.process_step(self.step_index, [])
 
         # 3. Vehicle assessments (ODD Engine) for all 72 vehicles
         vehicle_assessments = self.odd_engine.evaluate_all(self.vehicles_last_seen)
