@@ -1,0 +1,372 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "decision.schema.json",
+  "title": "Полный снимок решения команды по одному пакету",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "scenario_id",
+    "packet_id",
+    "decision_time",
+    "state_estimates",
+    "source_assessments",
+    "vehicle_assessments",
+    "vehicle_actions"
+  ],
+  "properties": {
+    "scenario_id": {
+      "type": "string"
+    },
+    "packet_id": {
+      "type": "string"
+    },
+    "decision_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "state_estimates": {
+      "type": "array",
+      "minItems": 86,
+      "maxItems": 86,
+      "x-unique-by": "segment_id",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "segment_id",
+          "state",
+          "confidence",
+          "rationale_codes"
+        ],
+        "properties": {
+          "segment_id": {
+            "type": "string",
+            "pattern": "^S[0-9]{3}$"
+          },
+          "state": {
+            "enum": [
+              "OPEN",
+              "CONGESTED",
+              "PARTIAL_BLOCK",
+              "CLOSED",
+              "UNKNOWN"
+            ]
+          },
+          "lanes_open_estimate": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 8
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "rationale_codes": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "STATE_OPEN",
+                "STATE_CONGESTED",
+                "STATE_PARTIAL_BLOCK",
+                "STATE_CLOSED",
+                "STATE_UNKNOWN",
+                "SOURCE_OUTAGE",
+                "SOURCE_DELAY",
+                "SOURCE_TIME_SKEW",
+                "SOURCE_FREEZE",
+                "SOURCE_DRIFT",
+                "SOURCE_PACKET_LOSS",
+                "SOURCE_BIAS",
+                "SOURCE_BYZANTINE",
+                "SOURCE_FALSE_CLOSURE",
+                "SOURCE_STALE",
+                "ODD_VISIBILITY",
+                "ODD_RAIN",
+                "ODD_GNSS",
+                "ODD_V2X",
+                "ODD_STRUCTURE",
+                "ODD_WEIGHT_LIMIT",
+                "ODD_MAP_AGE",
+                "ROUTE_CLOSED",
+                "ROUTE_CONGESTED",
+                "ROUTE_WEIGHT_LIMIT",
+                "ROUTE_AV_FORBIDDEN",
+                "ROUTE_HUB_CAPACITY",
+                "SAFE_STOP_CAPACITY",
+                "REMOTE_SUPPORT_CAPACITY",
+                "LOW_CONFIDENCE",
+                "LATE_DATA",
+                "DUPLICATE_DATA",
+                "NO_FRESH_DATA",
+                "AT_HUB_OR_INACTIVE"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "source_assessments": {
+      "type": "array",
+      "minItems": 50,
+      "maxItems": 50,
+      "x-unique-by": "source_id",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "status",
+          "trust_score",
+          "confidence",
+          "fault_types"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "OK",
+              "DEGRADED",
+              "FAILED",
+              "UNKNOWN"
+            ]
+          },
+          "trust_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "fault_types": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "OUTAGE",
+                "DELAY",
+                "TIME_SKEW",
+                "FREEZE",
+                "DRIFT",
+                "PACKET_LOSS",
+                "BIAS",
+                "BYZANTINE",
+                "FALSE_LANE_CLOSURE",
+                "STALE"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "vehicle_assessments": {
+      "type": "array",
+      "minItems": 72,
+      "maxItems": 72,
+      "x-unique-by": "vehicle_id",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "vehicle_id",
+          "odd_status",
+          "violation_codes",
+          "confidence"
+        ],
+        "properties": {
+          "vehicle_id": {
+            "type": "string",
+            "pattern": "^AV-[0-9]{3}$"
+          },
+          "odd_status": {
+            "enum": [
+              "COMPLIANT",
+              "VIOLATED",
+              "UNKNOWN"
+            ]
+          },
+          "violation_codes": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "VISIBILITY",
+                "RAIN",
+                "GNSS",
+                "V2X",
+                "STRUCTURE",
+                "WEIGHT_LIMIT",
+                "MAP_AGE"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    "vehicle_actions": {
+      "type": "array",
+      "minItems": 72,
+      "maxItems": 72,
+      "x-unique-by": "vehicle_id",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "vehicle_id",
+          "motion_action",
+          "remote_support_required",
+          "confidence",
+          "rationale_codes"
+        ],
+        "properties": {
+          "vehicle_id": {
+            "type": "string",
+            "pattern": "^AV-[0-9]{3}$"
+          },
+          "motion_action": {
+            "enum": [
+              "NO_ACTION",
+              "CONTINUE",
+              "LIMIT_SPEED",
+              "REROUTE",
+              "HOLD",
+              "SAFE_STOP"
+            ]
+          },
+          "speed_limit_kmh": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "exclusiveMinimum": 0,
+            "maximum": 130
+          },
+          "route_segment_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^S[0-9]{3}$"
+            },
+            "minItems": 1,
+            "maxItems": 86
+          },
+          "safe_stop_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^SS-[0-9]{2}$"
+          },
+          "remote_support_required": {
+            "type": "boolean"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "rationale_codes": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "STATE_OPEN",
+                "STATE_CONGESTED",
+                "STATE_PARTIAL_BLOCK",
+                "STATE_CLOSED",
+                "STATE_UNKNOWN",
+                "SOURCE_OUTAGE",
+                "SOURCE_DELAY",
+                "SOURCE_TIME_SKEW",
+                "SOURCE_FREEZE",
+                "SOURCE_DRIFT",
+                "SOURCE_PACKET_LOSS",
+                "SOURCE_BIAS",
+                "SOURCE_BYZANTINE",
+                "SOURCE_FALSE_CLOSURE",
+                "SOURCE_STALE",
+                "ODD_VISIBILITY",
+                "ODD_RAIN",
+                "ODD_GNSS",
+                "ODD_V2X",
+                "ODD_STRUCTURE",
+                "ODD_WEIGHT_LIMIT",
+                "ODD_MAP_AGE",
+                "ROUTE_CLOSED",
+                "ROUTE_CONGESTED",
+                "ROUTE_WEIGHT_LIMIT",
+                "ROUTE_AV_FORBIDDEN",
+                "ROUTE_HUB_CAPACITY",
+                "SAFE_STOP_CAPACITY",
+                "REMOTE_SUPPORT_CAPACITY",
+                "LOW_CONFIDENCE",
+                "LATE_DATA",
+                "DUPLICATE_DATA",
+                "NO_FRESH_DATA",
+                "AT_HUB_OR_INACTIVE"
+              ]
+            },
+            "uniqueItems": true
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "motion_action": {
+                  "const": "LIMIT_SPEED"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "speed_limit_kmh"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "motion_action": {
+                  "const": "REROUTE"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "route_segment_ids"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "motion_action": {
+                  "const": "SAFE_STOP"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "safe_stop_id"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "ODD-A": {
+    "min_visibility_m": 70,
+    "v2x_required": false,
+    "max_rain_level": 3,
+    "min_gnss_quality": 0.55,
+    "max_map_age_min": 1440,
+    "max_crosswind_mps": 22,
+    "allowed_structures": [
+      "open",
+      "bridge",
+      "tunnel"
+    ]
+  },
+  "ODD-B": {
+    "min_visibility_m": 100,
+    "v2x_required": true,
+    "max_rain_level": 2,
+    "min_gnss_quality": 0.7,
+    "max_map_age_min": 360,
+    "max_crosswind_mps": 18,
+    "allowed_structures": [
+      "open",
+      "bridge",
+      "tunnel"
+    ]
+  },
+  "ODD-C": {
+    "min_visibility_m": 150,
+    "v2x_required": false,
+    "max_rain_level": 2,
+    "min_gnss_quality": 0.8,
+    "max_map_age_min": 240,
+    "max_crosswind_mps": 16,
+    "allowed_structures": [
+      "open",
+      "bridge"
+    ]
+  },
+  "ODD-D": {
+    "min_visibility_m": 80,
+    "v2x_required": true,
+    "max_rain_level": 3,
+    "min_gnss_quality": 0.65,
+    "max_map_age_min": 60,
+    "max_crosswind_mps": 20,
+    "allowed_structures": [
+      "open",
+      "bridge",
+      "tunnel"
+    ]
+  }
+}

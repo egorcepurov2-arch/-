@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "packet.schema.json",
+  "title": "Пакет наблюдений одного шага",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "dataset_id",
+    "dataset_version",
+    "scenario_id",
+    "packet_id",
+    "step",
+    "window_start",
+    "window_end",
+    "decision_time",
+    "watermark_time",
+    "event_count",
+    "is_final",
+    "events"
+  ],
+  "properties": {
+    "dataset_id": {
+      "const": "AV-CORRIDOR-2026-V2"
+    },
+    "dataset_version": {
+      "const": "2.0"
+    },
+    "scenario_id": {
+      "type": "string"
+    },
+    "packet_id": {
+      "type": "string"
+    },
+    "step": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "window_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "window_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "decision_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "watermark_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "event_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "is_final": {
+      "type": "boolean"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "01_event.schema.json"
+      }
+    }
+  }
+}

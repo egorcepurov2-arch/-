@@ -1,0 +1,7 @@
+{
+  "pool_id": "REMOTE-OPS-01",
+  "operator_count": 6,
+  "max_parallel_sessions": 6,
+  "session_setup_sec": 20,
+  "synthetic": true
+}

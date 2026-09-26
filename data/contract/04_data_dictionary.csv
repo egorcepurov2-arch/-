@@ -1,0 +1,177 @@
+object,field,type,unit,required,allowed_values,description,example
+VEHICLE_TELEMETRY,event_id,string,-,yes,,Уникальный идентификатор исходного события.,TRAIN-003-0000542101
+VEHICLE_TELEMETRY,scenario_id,string,-,yes,,Идентификатор сценария.,TRAIN-003
+VEHICLE_TELEMETRY,event_no,integer,-,yes,,Порядковый номер события в модели сценария.,542101
+VEHICLE_TELEMETRY,stream_seq,integer,-,yes,,Порядковый номер в исходном потоке.,4832
+VEHICLE_TELEMETRY,delivery_no,integer,-,yes,,Сквозной номер выдачи после сортировки по received_time.,541887
+VEHICLE_TELEMETRY,event_type,enum,-,yes,,Тип события.,V2X_MESSAGE
+VEHICLE_TELEMETRY,source_id,string,-,yes,,Идентификатор источника.,RSU-04
+VEHICLE_TELEMETRY,event_time,datetime,UTC,yes,,Время измерения или возникновения явления.,2026-09-28T11:17:41.000Z
+VEHICLE_TELEMETRY,received_time,datetime,UTC,yes,,Время получения события центром управления.,2026-09-28T11:17:53.000Z
+VEHICLE_TELEMETRY,vehicle_id,string,-,yes,,Идентификатор ВАТС.,AV-017
+VEHICLE_TELEMETRY,segment_id,string,-,yes,,Текущий сегмент.,S018
+VEHICLE_TELEMETRY,offset_m,number,m,yes,,Положение от начала сегмента.,1384.2
+VEHICLE_TELEMETRY,speed_kmh,number,km/h,yes,,Наблюдаемая скорость.,71.42
+VEHICLE_TELEMETRY,acceleration_mps2,number,m/s2,yes,,Продольное ускорение.,-0.45
+VEHICLE_TELEMETRY,heading_deg,number,deg,yes,,Курс.,90
+VEHICLE_TELEMETRY,gnss_quality,number,0..1,yes,,Оценка качества GNSS.,0.83
+VEHICLE_TELEMETRY,localization_confidence,number,0..1,yes,,Оценка локализации.,0.88
+VEHICLE_TELEMETRY,perception_health,number,0..1,yes,,Состояние бортового восприятия.,0.91
+VEHICLE_TELEMETRY,communication_latency_ms,number,ms,yes,,Задержка канала.,642
+VEHICLE_TELEMETRY,packet_loss_pct_10s,number,%,yes,,Потери пакетов за 10 секунд.,22
+VEHICLE_TELEMETRY,autonomy_state,enum,-,yes,AUTO|DEGRADED|REMOTE_REQUESTED,Режим автономности.,DEGRADED
+VEHICLE_TELEMETRY,onboard_map_version,integer,-,yes,,Версия карты на борту.,2026092801
+VEHICLE_TELEMETRY,map_age_min,number,min,yes,,Возраст карты.,73.5
+VEHICLE_TELEMETRY,odd_profile_id,string,-,yes,,Профиль ODD.,ODD-B
+VEHICLE_TELEMETRY,cargo_priority,integer,1..5,yes,,Приоритет груза.,4
+VEHICLE_TELEMETRY,destination_hub_id,string,-,yes,,Терминал назначения.,HUB-04
+VEHICLE_TELEMETRY,self_reported_confidence,number,0..1,yes,,Самооценка источника.,0.94
+ROAD_OBSERVATION,event_id,string,-,yes,,Уникальный идентификатор исходного события.,TRAIN-003-0000542101
+ROAD_OBSERVATION,scenario_id,string,-,yes,,Идентификатор сценария.,TRAIN-003
+ROAD_OBSERVATION,event_no,integer,-,yes,,Порядковый номер события в модели сценария.,542101
+ROAD_OBSERVATION,stream_seq,integer,-,yes,,Порядковый номер в исходном потоке.,4832
+ROAD_OBSERVATION,delivery_no,integer,-,yes,,Сквозной номер выдачи после сортировки по received_time.,541887
+ROAD_OBSERVATION,event_type,enum,-,yes,,Тип события.,V2X_MESSAGE
+ROAD_OBSERVATION,source_id,string,-,yes,,Идентификатор источника.,RSU-04
+ROAD_OBSERVATION,event_time,datetime,UTC,yes,,Время измерения или возникновения явления.,2026-09-28T11:17:41.000Z
+ROAD_OBSERVATION,received_time,datetime,UTC,yes,,Время получения события центром управления.,2026-09-28T11:17:53.000Z
+ROAD_OBSERVATION,source_type,enum,-,yes,ROAD_DETECTOR|VIDEO_ANALYTICS,Тип источника.,ROAD_DETECTOR
+ROAD_OBSERVATION,segment_id,string,-,yes,,Сегмент.,S018
+ROAD_OBSERVATION,flow_vph,number,veh/h,yes,,Интенсивность.,1620
+ROAD_OBSERVATION,speed_kmh,number,km/h,yes,,Средняя скорость.,64.3
+ROAD_OBSERVATION,occupancy_pct,number,%,yes,,Занятость зоны.,54.2
+ROAD_OBSERVATION,queue_estimate_m,number,m,yes,,Оценка очереди.,128
+ROAD_OBSERVATION,lane_count_open_estimate,integer,lane,yes,,Открытые полосы.,2
+ROAD_OBSERVATION,lane_status,enum,-,no,OPEN|PARTIAL_BLOCK|CLOSED|null,Состояние полос.,PARTIAL_BLOCK
+ROAD_OBSERVATION,sequence_no,integer,-,yes,,Номер сообщения источника.,204
+ROAD_OBSERVATION,self_reported_confidence,number,0..1,yes,,Самооценка источника.,0.97
+V2X_MESSAGE,event_id,string,-,yes,,Уникальный идентификатор исходного события.,TRAIN-003-0000542101
+V2X_MESSAGE,scenario_id,string,-,yes,,Идентификатор сценария.,TRAIN-003
+V2X_MESSAGE,event_no,integer,-,yes,,Порядковый номер события в модели сценария.,542101
+V2X_MESSAGE,stream_seq,integer,-,yes,,Порядковый номер в исходном потоке.,4832
+V2X_MESSAGE,delivery_no,integer,-,yes,,Сквозной номер выдачи после сортировки по received_time.,541887
+V2X_MESSAGE,event_type,enum,-,yes,,Тип события.,V2X_MESSAGE
+V2X_MESSAGE,source_id,string,-,yes,,Идентификатор источника.,RSU-04
+V2X_MESSAGE,event_time,datetime,UTC,yes,,Время измерения или возникновения явления.,2026-09-28T11:17:41.000Z
+V2X_MESSAGE,received_time,datetime,UTC,yes,,Время получения события центром управления.,2026-09-28T11:17:53.000Z
+V2X_MESSAGE,rsu_id,string,-,yes,,Идентификатор RSU.,RSU-04
+V2X_MESSAGE,v2x_zone,string,-,yes,,Зона V2X.,V2X-04
+V2X_MESSAGE,message_type,string,-,yes,,Тип сообщения.,ROAD_STATE
+V2X_MESSAGE,sequence_no,integer,-,yes,,Номер сообщения.,94
+V2X_MESSAGE,segment_id,string,-,yes,,Сегмент.,S027
+V2X_MESSAGE,lane_status,enum,-,no,OPEN|PARTIAL_BLOCK|CLOSED,Состояние полос по версии RSU.,OPEN
+V2X_MESSAGE,advisory_speed_kmh,number,km/h,yes,,Рекомендуемая скорость.,55
+V2X_MESSAGE,queue_estimate_m,number,m,yes,,Оценка очереди.,84
+V2X_MESSAGE,signature_valid,boolean,-,yes,,Техническая проверка подписи.,true
+V2X_MESSAGE,source_clock_offset_ms,number,ms,yes,,Смещение часов.,-12
+V2X_MESSAGE,self_reported_confidence,number,0..1,yes,,Самооценка источника.,0.98
+V2X_MESSAGE,duplicate,boolean,-,no,true|false,Признак повторной передачи.,true
+WEATHER_OBSERVATION,event_id,string,-,yes,,Уникальный идентификатор исходного события.,TRAIN-003-0000542101
+WEATHER_OBSERVATION,scenario_id,string,-,yes,,Идентификатор сценария.,TRAIN-003
+WEATHER_OBSERVATION,event_no,integer,-,yes,,Порядковый номер события в модели сценария.,542101
+WEATHER_OBSERVATION,stream_seq,integer,-,yes,,Порядковый номер в исходном потоке.,4832
+WEATHER_OBSERVATION,delivery_no,integer,-,yes,,Сквозной номер выдачи после сортировки по received_time.,541887
+WEATHER_OBSERVATION,event_type,enum,-,yes,,Тип события.,V2X_MESSAGE
+WEATHER_OBSERVATION,source_id,string,-,yes,,Идентификатор источника.,RSU-04
+WEATHER_OBSERVATION,event_time,datetime,UTC,yes,,Время измерения или возникновения явления.,2026-09-28T11:17:41.000Z
+WEATHER_OBSERVATION,received_time,datetime,UTC,yes,,Время получения события центром управления.,2026-09-28T11:17:53.000Z
+WEATHER_OBSERVATION,station_id,string,-,yes,,Метеостанция.,WX-03
+WEATHER_OBSERVATION,visibility_m,number,m,yes,,Видимость.,110
+WEATHER_OBSERVATION,rain_level,integer,0..3,yes,0|1|2|3,Уровень осадков.,2
+WEATHER_OBSERVATION,precipitation_mm_h,number,mm/h,yes,,Интенсивность осадков.,5.5
+WEATHER_OBSERVATION,wind_mps,number,m/s,yes,,Скорость ветра.,9.2
+WEATHER_OBSERVATION,road_surface,enum,-,yes,DRY|WET|WATER_FILM|FLOODED,Состояние покрытия.,WET
+WEATHER_OBSERVATION,air_temperature_c,number,C,yes,,Температура воздуха.,12.4
+WEATHER_OBSERVATION,self_reported_confidence,number,0..1,yes,,Самооценка источника.,0.96
+DIGITAL_TWIN_SEGMENT,event_id,string,-,yes,,Уникальный идентификатор исходного события.,TRAIN-003-0000542101
+DIGITAL_TWIN_SEGMENT,scenario_id,string,-,yes,,Идентификатор сценария.,TRAIN-003
+DIGITAL_TWIN_SEGMENT,event_no,integer,-,yes,,Порядковый номер события в модели сценария.,542101
+DIGITAL_TWIN_SEGMENT,stream_seq,integer,-,yes,,Порядковый номер в исходном потоке.,4832
+DIGITAL_TWIN_SEGMENT,delivery_no,integer,-,yes,,Сквозной номер выдачи после сортировки по received_time.,541887
+DIGITAL_TWIN_SEGMENT,event_type,enum,-,yes,,Тип события.,V2X_MESSAGE
+DIGITAL_TWIN_SEGMENT,source_id,string,-,yes,,Идентификатор источника.,RSU-04
+DIGITAL_TWIN_SEGMENT,event_time,datetime,UTC,yes,,Время измерения или возникновения явления.,2026-09-28T11:17:41.000Z
+DIGITAL_TWIN_SEGMENT,received_time,datetime,UTC,yes,,Время получения события центром управления.,2026-09-28T11:17:53.000Z
+DIGITAL_TWIN_SEGMENT,digital_twin_id,string,-,yes,,Идентификатор цифрового двойника.,DT-CORE
+DIGITAL_TWIN_SEGMENT,segment_id,string,-,yes,,Сегмент.,S027
+DIGITAL_TWIN_SEGMENT,lane_count_open,integer,lane,yes,,Открытые полосы.,2
+DIGITAL_TWIN_SEGMENT,closure_state,enum,-,yes,OPEN|PARTIAL_BLOCK|CLOSED,Состояние сегмента.,OPEN
+DIGITAL_TWIN_SEGMENT,speed_limit_kmh,number,km/h,yes,,Ограничение скорости.,110
+DIGITAL_TWIN_SEGMENT,map_version,integer,-,yes,,Версия карты.,2026092801
+DIGITAL_TWIN_SEGMENT,source_updated_time,datetime,UTC,yes,,Время обновления.,2026-09-28T08:10:00.000Z
+DIGITAL_TWIN_SEGMENT,snapshot_age_sec,number,s,yes,,Возраст снимка.,420
+DIGITAL_TWIN_SEGMENT,self_reported_confidence,number,0..1,yes,,Самооценка источника.,0.99
+INFRASTRUCTURE_HEALTH,event_id,string,-,yes,,Уникальный идентификатор исходного события.,TRAIN-003-0000542101
+INFRASTRUCTURE_HEALTH,scenario_id,string,-,yes,,Идентификатор сценария.,TRAIN-003
+INFRASTRUCTURE_HEALTH,event_no,integer,-,yes,,Порядковый номер события в модели сценария.,542101
+INFRASTRUCTURE_HEALTH,stream_seq,integer,-,yes,,Порядковый номер в исходном потоке.,4832
+INFRASTRUCTURE_HEALTH,delivery_no,integer,-,yes,,Сквозной номер выдачи после сортировки по received_time.,541887
+INFRASTRUCTURE_HEALTH,event_type,enum,-,yes,,Тип события.,V2X_MESSAGE
+INFRASTRUCTURE_HEALTH,source_id,string,-,yes,,Идентификатор источника.,RSU-04
+INFRASTRUCTURE_HEALTH,event_time,datetime,UTC,yes,,Время измерения или возникновения явления.,2026-09-28T11:17:41.000Z
+INFRASTRUCTURE_HEALTH,received_time,datetime,UTC,yes,,Время получения события центром управления.,2026-09-28T11:17:53.000Z
+INFRASTRUCTURE_HEALTH,component_id,string,-,yes,,Компонент.,RSU-06
+INFRASTRUCTURE_HEALTH,component_type,enum,-,yes,DETECTOR|CAMERA|RSU|WEATHER|DIGITAL_TWIN,Тип компонента.,RSU
+INFRASTRUCTURE_HEALTH,status,enum,-,yes,OK|DEGRADED|NO_HEARTBEAT,Самодиагностика.,OK
+INFRASTRUCTURE_HEALTH,cpu_load_pct,number,%,yes,,Загрузка процессора.,42
+INFRASTRUCTURE_HEALTH,memory_used_pct,number,%,yes,,Использование памяти.,58
+INFRASTRUCTURE_HEALTH,network_packet_loss_pct,number,%,yes,,Потери в сети.,21
+INFRASTRUCTURE_HEALTH,time_sync_offset_ms,number,ms,yes,,Рассогласование времени.,-45000
+INFRASTRUCTURE_HEALTH,last_heartbeat_age_sec,number,s,yes,,Возраст сигнала.,90
+HUB_STATUS,event_id,string,-,yes,,Уникальный идентификатор исходного события.,TRAIN-003-0000542101
+HUB_STATUS,scenario_id,string,-,yes,,Идентификатор сценария.,TRAIN-003
+HUB_STATUS,event_no,integer,-,yes,,Порядковый номер события в модели сценария.,542101
+HUB_STATUS,stream_seq,integer,-,yes,,Порядковый номер в исходном потоке.,4832
+HUB_STATUS,delivery_no,integer,-,yes,,Сквозной номер выдачи после сортировки по received_time.,541887
+HUB_STATUS,event_type,enum,-,yes,,Тип события.,V2X_MESSAGE
+HUB_STATUS,source_id,string,-,yes,,Идентификатор источника.,RSU-04
+HUB_STATUS,event_time,datetime,UTC,yes,,Время измерения или возникновения явления.,2026-09-28T11:17:41.000Z
+HUB_STATUS,received_time,datetime,UTC,yes,,Время получения события центром управления.,2026-09-28T11:17:53.000Z
+HUB_STATUS,hub_id,string,-,yes,,Терминал.,HUB-03
+HUB_STATUS,queue_vehicles,number,veh,yes,,Очередь.,24.2
+HUB_STATUS,capacity_vehicles,integer,veh,yes,,Вместимость.,22
+HUB_STATUS,capacity_used_pct,number,%,yes,,Загрузка.,110
+HUB_STATUS,service_rate_vph,number,veh/h,yes,,Темп обслуживания.,14
+HUB_STATUS,estimated_wait_min,number,min,yes,,Ожидаемое время.,103.7
+HUB_STATUS,accepting_new_arrivals,boolean,-,yes,,Возможность принимать новые прибытия.,false
+packet,dataset_id,string,-,yes,AV-CORRIDOR-2026-V2,Набор данных.,AV-CORRIDOR-2026-V2
+packet,dataset_version,string,-,yes,2.0,Версия набора.,2.0
+packet,scenario_id,string,-,yes,,Сценарий.,PUBLIC-101
+packet,packet_id,string,-,yes,,Идентификатор пакета.,PUBLIC-101-P0001
+packet,step,integer,-,yes,,Номер шага.,1
+packet,window_start,datetime,UTC,yes,,Начало окна.,2026-09-29T09:00:00.000Z
+packet,window_end,datetime,UTC,yes,,Конец окна.,2026-09-29T09:00:05.000Z
+packet,decision_time,datetime,UTC,yes,,Модельное время решения.,2026-09-29T09:00:05.000Z
+packet,watermark_time,datetime,UTC,yes,,Граница завершённости запоздавших событий.,2026-09-29T09:00:00.000Z
+packet,event_count,integer,-,yes,,Число событий.,463
+packet,is_final,boolean,-,yes,,Последний пакет сценария.,false
+packet,events,array,-,yes,,События пакета.,[...]
+decision,scenario_id,string,-,yes,,Сценарий.,PUBLIC-101
+decision,packet_id,string,-,yes,,Пакет.,PUBLIC-101-P0001
+decision,decision_time,datetime,UTC,yes,,Время решения.,2026-09-30T10:00:05.000Z
+decision,state_estimates,array,-,yes,exactly 86,Полный снимок сегментов.,[...]
+decision,source_assessments,array,-,yes,exactly 50,Полный снимок источников.,[...]
+decision,vehicle_assessments,array,-,yes,exactly 72,Полный снимок проверки ODD.,[...]
+decision,vehicle_actions,array,-,yes,exactly 72,Полный снимок действий.,[...]
+state_estimate,segment_id,string,-,yes,,Сегмент.,S041
+state_estimate,state,enum,-,yes,OPEN|CONGESTED|PARTIAL_BLOCK|CLOSED|UNKNOWN,Оценка состояния.,PARTIAL_BLOCK
+state_estimate,lanes_open_estimate,integer,lane,no,,Оценка открытых полос.,1
+state_estimate,confidence,number,0..1,yes,,Уверенность.,0.87
+state_estimate,rationale_codes,array,-,yes,,Коды причин.,"[""STATE_PARTIAL_BLOCK""]"
+source_assessment,source_id,string,-,yes,,Источник.,RSU-04
+source_assessment,status,enum,-,yes,OK|DEGRADED|FAILED|UNKNOWN,Состояние источника.,DEGRADED
+source_assessment,trust_score,number,0..1,yes,,Оценка доверия.,0.25
+source_assessment,confidence,number,0..1,yes,,Уверенность.,0.81
+source_assessment,fault_types,array,-,yes,,Типы деградации.,"[""TIME_SKEW""]"
+vehicle_assessment,vehicle_id,string,-,yes,,ВАТС.,AV-017
+vehicle_assessment,odd_status,enum,-,yes,COMPLIANT|VIOLATED|UNKNOWN,Результат проверки ODD.,VIOLATED
+vehicle_assessment,violation_codes,array,-,yes,,Причины нарушения.,"[""V2X""]"
+vehicle_assessment,confidence,number,0..1,yes,,Уверенность.,0.91
+vehicle_action,vehicle_id,string,-,yes,,ВАТС.,AV-017
+vehicle_action,motion_action,enum,-,yes,NO_ACTION|CONTINUE|LIMIT_SPEED|REROUTE|HOLD|SAFE_STOP,Действие движения на текущем шаге.,REROUTE
+vehicle_action,speed_limit_kmh,number,km/h,conditional,,Обязательно для LIMIT_SPEED.,30
+vehicle_action,route_segment_ids,array,-,conditional,,Полный новый путь после текущего сегмента.,"[""S052"",""S054""]"
+vehicle_action,safe_stop_id,string,-,conditional,,Обязательно для SAFE_STOP.,SS-04
+vehicle_action,remote_support_required,boolean,-,yes,,Нужно ли удерживать сессию дистанционной поддержки.,true
+vehicle_action,confidence,number,0..1,yes,,Уверенность.,0.81
+vehicle_action,rationale_codes,array,-,yes,,Коды причин.,"[""ODD_V2X""]"

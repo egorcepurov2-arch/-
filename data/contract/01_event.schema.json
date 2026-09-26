@@ -1,0 +1,509 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "event.schema.json",
+  "title": "Событие наблюдения транспортного коридора",
+  "type": "object",
+  "required": [
+    "event_id",
+    "scenario_id",
+    "event_no",
+    "stream_seq",
+    "delivery_no",
+    "event_type",
+    "source_id",
+    "event_time",
+    "received_time"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scenario_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_no": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "stream_seq": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "delivery_no": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "event_type": {
+      "enum": [
+        "VEHICLE_TELEMETRY",
+        "ROAD_OBSERVATION",
+        "V2X_MESSAGE",
+        "WEATHER_OBSERVATION",
+        "DIGITAL_TWIN_SEGMENT",
+        "INFRASTRUCTURE_HEALTH",
+        "HUB_STATUS"
+      ]
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "received_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "vehicle_id": {
+      "type": "string",
+      "pattern": "^AV-[0-9]{3}$"
+    },
+    "segment_id": {
+      "type": "string",
+      "pattern": "^S[0-9]{3}$"
+    },
+    "offset_m": {
+      "type": "number",
+      "minimum": 0
+    },
+    "speed_kmh": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 160
+    },
+    "acceleration_mps2": {
+      "type": "number",
+      "minimum": -10,
+      "maximum": 10
+    },
+    "heading_deg": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 360
+    },
+    "gnss_quality": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "localization_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "perception_health": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "communication_latency_ms": {
+      "type": "number",
+      "minimum": 0
+    },
+    "packet_loss_pct_10s": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "autonomy_state": {
+      "enum": [
+        "AUTO",
+        "DEGRADED",
+        "REMOTE_REQUESTED"
+      ]
+    },
+    "onboard_map_version": {
+      "type": "integer"
+    },
+    "map_age_min": {
+      "type": "number",
+      "minimum": 0
+    },
+    "odd_profile_id": {
+      "enum": [
+        "ODD-A",
+        "ODD-B",
+        "ODD-C",
+        "ODD-D"
+      ]
+    },
+    "cargo_priority": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "destination_hub_id": {
+      "type": "string",
+      "pattern": "^HUB-[0-9]{2}$"
+    },
+    "self_reported_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "source_type": {
+      "enum": [
+        "ROAD_DETECTOR",
+        "VIDEO_ANALYTICS"
+      ]
+    },
+    "flow_vph": {
+      "type": "number",
+      "minimum": 0
+    },
+    "occupancy_pct": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "queue_estimate_m": {
+      "type": "number",
+      "minimum": 0
+    },
+    "lane_count_open_estimate": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 8
+    },
+    "lane_status": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "OPEN",
+        "PARTIAL_BLOCK",
+        "CLOSED",
+        null
+      ]
+    },
+    "sequence_no": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "rsu_id": {
+      "type": "string",
+      "pattern": "^RSU-[0-9]{2}$"
+    },
+    "v2x_zone": {
+      "type": "string",
+      "pattern": "^V2X-[0-9]{2}$"
+    },
+    "message_type": {
+      "type": "string"
+    },
+    "advisory_speed_kmh": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 160
+    },
+    "signature_valid": {
+      "type": "boolean"
+    },
+    "source_clock_offset_ms": {
+      "type": "number"
+    },
+    "duplicate": {
+      "type": "boolean"
+    },
+    "station_id": {
+      "type": "string",
+      "pattern": "^WX-[0-9]{2}$"
+    },
+    "visibility_m": {
+      "type": "number",
+      "minimum": 0
+    },
+    "rain_level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3
+    },
+    "precipitation_mm_h": {
+      "type": "number",
+      "minimum": 0
+    },
+    "wind_mps": {
+      "type": "number",
+      "minimum": 0
+    },
+    "road_surface": {
+      "enum": [
+        "DRY",
+        "WET",
+        "WATER_FILM",
+        "FLOODED"
+      ]
+    },
+    "air_temperature_c": {
+      "type": "number"
+    },
+    "digital_twin_id": {
+      "type": "string"
+    },
+    "lane_count_open": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 8
+    },
+    "closure_state": {
+      "enum": [
+        "OPEN",
+        "PARTIAL_BLOCK",
+        "CLOSED"
+      ]
+    },
+    "speed_limit_kmh": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 160
+    },
+    "map_version": {
+      "type": "integer"
+    },
+    "source_updated_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "snapshot_age_sec": {
+      "type": "number",
+      "minimum": 0
+    },
+    "component_id": {
+      "type": "string"
+    },
+    "component_type": {
+      "enum": [
+        "DETECTOR",
+        "CAMERA",
+        "RSU",
+        "WEATHER",
+        "DIGITAL_TWIN"
+      ]
+    },
+    "status": {
+      "enum": [
+        "OK",
+        "DEGRADED",
+        "NO_HEARTBEAT"
+      ]
+    },
+    "cpu_load_pct": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "memory_used_pct": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "network_packet_loss_pct": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "time_sync_offset_ms": {
+      "type": "number"
+    },
+    "last_heartbeat_age_sec": {
+      "type": "number",
+      "minimum": 0
+    },
+    "hub_id": {
+      "type": "string",
+      "pattern": "^HUB-[0-9]{2}$"
+    },
+    "queue_vehicles": {
+      "type": "number",
+      "minimum": 0
+    },
+    "capacity_vehicles": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "capacity_used_pct": {
+      "type": "number",
+      "minimum": 0
+    },
+    "service_rate_vph": {
+      "type": "number",
+      "minimum": 0
+    },
+    "estimated_wait_min": {
+      "type": "number",
+      "minimum": 0
+    },
+    "accepting_new_arrivals": {
+      "type": "boolean"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "VEHICLE_TELEMETRY"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "vehicle_id",
+          "segment_id",
+          "offset_m",
+          "speed_kmh",
+          "acceleration_mps2",
+          "heading_deg",
+          "gnss_quality",
+          "localization_confidence",
+          "perception_health",
+          "communication_latency_ms",
+          "packet_loss_pct_10s",
+          "autonomy_state",
+          "onboard_map_version",
+          "map_age_min",
+          "odd_profile_id",
+          "cargo_priority",
+          "destination_hub_id",
+          "self_reported_confidence"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "ROAD_OBSERVATION"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "source_type",
+          "segment_id",
+          "flow_vph",
+          "speed_kmh",
+          "occupancy_pct",
+          "queue_estimate_m",
+          "lane_count_open_estimate",
+          "sequence_no",
+          "self_reported_confidence"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "V2X_MESSAGE"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "rsu_id",
+          "v2x_zone",
+          "message_type",
+          "sequence_no",
+          "segment_id",
+          "lane_status",
+          "advisory_speed_kmh",
+          "queue_estimate_m",
+          "signature_valid",
+          "source_clock_offset_ms",
+          "self_reported_confidence"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "WEATHER_OBSERVATION"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "station_id",
+          "visibility_m",
+          "rain_level",
+          "precipitation_mm_h",
+          "wind_mps",
+          "road_surface",
+          "air_temperature_c",
+          "self_reported_confidence"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "DIGITAL_TWIN_SEGMENT"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "digital_twin_id",
+          "segment_id",
+          "lane_count_open",
+          "closure_state",
+          "speed_limit_kmh",
+          "map_version",
+          "source_updated_time",
+          "snapshot_age_sec",
+          "self_reported_confidence"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "INFRASTRUCTURE_HEALTH"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "component_id",
+          "component_type",
+          "status",
+          "cpu_load_pct",
+          "memory_used_pct",
+          "network_packet_loss_pct",
+          "time_sync_offset_ms",
+          "last_heartbeat_age_sec"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "HUB_STATUS"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "hub_id",
+          "queue_vehicles",
+          "capacity_vehicles",
+          "capacity_used_pct",
+          "service_rate_vph",
+          "estimated_wait_min",
+          "accepting_new_arrivals"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": true
+}

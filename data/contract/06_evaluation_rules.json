@@ -1,0 +1,113 @@
+{
+  "dataset_id": "AV-CORRIDOR-2026-V2",
+  "dataset_version": "2.0",
+  "decision_interval_sec": 5,
+  "watermark_lag_sec": 60,
+  "execution_environment": {
+    "platform": "linux/amd64",
+    "packaging": "single Docker image",
+    "network": "organizer-internal evaluation network only; external egress disabled",
+    "cpu_limit_vcpu": 8,
+    "memory_limit_gb": 16,
+    "writable_disk_limit_gb": 10,
+    "gpu": false,
+    "image_size_limit_gb": 8,
+    "ready_timeout_sec": 60,
+    "decision_timeout_ms": 2000,
+    "total_wall_time_multiplier": 1.25
+  },
+  "public_leaderboard_weights": {
+    "segment_state": 15,
+    "source_faults": 10,
+    "confidence_calibration": 5
+  },
+  "final_weights": {
+    "safety_and_odd": 25,
+    "segment_state": 15,
+    "source_faults": 10,
+    "control_and_recovery": 20,
+    "logistics_and_resources": 15,
+    "confidence_calibration": 5,
+    "action_stability": 5,
+    "engineering_quality": 5
+  },
+  "metrics": {
+    "segment_state": "Macro F1 over truth-present classes OPEN, CONGESTED, PARTIAL_BLOCK and CLOSED; a missing prediction is treated as UNKNOWN.",
+    "source_faults": "0.50 * macro F1 of source status + 0.25 * macro multilabel F1 of fault types + 0.25 * detection-delay score. Detection-delay credit requires the correct fault type; full credit at 0 s and zero at 120 s.",
+    "safety_and_odd": "0.35 * macro F1 of ODD status for active vehicles + 0.10 * macro multilabel F1 of ODD violation codes + 0.55 * cargo-priority-weighted vehicle-action utility.",
+    "control_and_recovery": "0.50 * cargo-priority-weighted vehicle-action utility + 0.25 * source-fault detection-delay score + 0.25 * control-consistency score.",
+    "logistics_and_resources": "0.50 * full-route validity + 0.25 * safe-stop constraint score + 0.25 * remote-support constraint score.",
+    "confidence_calibration": "1 - mean squared error between declared confidence and factual correctness for segment state, source status and active-vehicle ODD status.",
+    "action_stability": "1 - unjustified switches / max(1, 0.10 * evaluated active-vehicle steps).",
+    "engineering_quality": "Manual 0..5 according to launch, schema validity, timing, determinism and logs."
+  },
+  "safety_gate": {
+    "critical_episode_min_consecutive_steps": 3,
+    "one_or_two_episodes_score_cap": 45,
+    "three_or_more_episodes_score_cap": 25
+  },
+  "critical_violations": [
+    "CONTINUE or NO_ACTION for a vehicle outside ODD without remote support for at least three consecutive steps.",
+    "REROUTE through an unknown, discontinuous, CLOSED, AV-forbidden or mass-incompatible segment, or a route that does not end at the destination HUB.",
+    "SAFE_STOP to an unknown, CLOSED or mass-incompatible safe stop.",
+    "Safe-stop capacity exceeded for at least three consecutive steps.",
+    "More than six concurrent remote-support assignments for at least three consecutive steps.",
+    "Missing or schema-invalid decision for an active vehicle outside ODD for at least three consecutive steps."
+  ],
+  "completeness": {
+    "state_estimates": 86,
+    "source_assessments": 50,
+    "vehicle_assessments": 72,
+    "vehicle_actions": 72
+  },
+  "aggregation": {
+    "scenario": "arithmetic mean over ADDITIONAL scenarios",
+    "rounding": "only the final result to two decimals",
+    "tie_break": "fewer critical episodes, then higher safety score, then lower mean decision latency"
+  },
+  "response_completeness": {
+    "definition": "Share of packets with a complete schema-valid decision snapshot.",
+    "application": "All automatically calculated criteria except engineering quality are multiplied by this share."
+  },
+  "route_validity": {
+    "definition": "For REROUTE, route_segment_ids contains the complete directed path after the current segment and ends at the vehicle destination HUB.",
+    "requirements": [
+      "all segments exist",
+      "first segment starts at current segment to_node",
+      "segments are contiguous",
+      "av_allowed=1",
+      "vehicle gross mass does not exceed weight limit",
+      "no segment is CLOSED at decision time",
+      "last segment ends at destination HUB node"
+    ]
+  },
+  "safe_stop_validity": {
+    "requirements": [
+      "safe_stop_id exists",
+      "vehicle mass does not exceed safe-stop and road-segment limits",
+      "safe-stop segment is not CLOSED",
+      "total simultaneous assignments do not exceed capacity"
+    ]
+  },
+  "vehicle_activity": {
+    "active_value": 1,
+    "inactive_value": 0,
+    "inactive_expected_odd_status": "UNKNOWN",
+    "inactive_expected_motion_action": "NO_ACTION",
+    "inactive_excluded_from_odd_quality": true
+  },
+  "action_utility_weighting": {
+    "priority_field": "cargo_priority",
+    "priority_range": [
+      1,
+      5
+    ],
+    "weight_formula": "6 - cargo_priority",
+    "meaning": "Priority 1 receives weight 5; priority 5 receives weight 1."
+  },
+  "source_fault_detection": {
+    "requires_correct_fault_type": true,
+    "full_credit_delay_sec": 0,
+    "zero_credit_delay_sec": 120
+  }
+}

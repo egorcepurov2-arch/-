@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# IDEs & Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Heavy datasets & archives (keep raw large files out of git)
+*.zip
+*.tar
+*.tar.gz
+*.iso
+*.ndjson.gz
+!data/train/*.csv.gz
+
+# Output & Result artifacts
+results/
+solution-image.tar
+public-results/
