@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.git
+.github
+.gitignore
+.venv
+venv
+tests
+scripts
+evaluate.py
+*.md
+*.zip
+*.tar
+*.gz
