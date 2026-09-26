@@ -138,6 +138,11 @@ class SystemState:
             source_assessments = self.source_tracker.process_step(self.step_index, [])
 
         # 3. Vehicle assessments (ODD Engine) for all 72 vehicles
+        for rsu_id in self.odd_engine.rsu_available:
+            s_data = self.source_tracker.sources_state.get(rsu_id)
+            if s_data and (s_data.get("status") != "OK" or s_data.get("trust_score", 1.0) < 0.8):
+                self.odd_engine.rsu_available[rsu_id] = False
+
         vehicle_assessments = self.odd_engine.evaluate_all(self.vehicles_last_seen)
 
         # 4. Vehicle actions (Router + Safety Guard) for all 72 vehicles

@@ -113,6 +113,10 @@ class SourceHealthTracker:
             else:
                 src_data["consecutive_missing_steps"] = 0
 
+            # --- Fault Detector 2: PACKET_LOSS ---
+            if src_data.get("packet_loss_pct", 0) >= 15.0:
+                faults.add("PACKET_LOSS")
+
             # --- Fault Detector 1: OUTAGE ---
             # Triggered if heartbeat explicitly NO_HEARTBEAT or missing for > 3 intervals
             expected_period = src_data["expected_period_sec"]
@@ -120,18 +124,14 @@ class SourceHealthTracker:
 
             if src_data["last_heartbeat_status"] == "NO_HEARTBEAT":
                 faults.add("OUTAGE")
-            elif src_data.get("last_heartbeat_age_sec", 0) > 60:
+            elif src_data.get("last_heartbeat_age_sec", 0) > 60 and "PACKET_LOSS" not in faults:
                 faults.add("OUTAGE")
             elif src_data["consecutive_missing_steps"] >= missing_threshold_steps and sid.startswith("RSU-"):
                 faults.add("OUTAGE")
 
-            # --- Fault Detector 2: PACKET_LOSS ---
-            if src_data.get("packet_loss_pct", 0) >= 35.0:
-                faults.add("PACKET_LOSS")
-
             # --- Fault Detector 3: DELAY ---
             recent_delays = src_data["recent_delays_sec"]
-            if recent_delays and (sum(recent_delays) / len(recent_delays)) >= 10.0:
+            if recent_delays and (sum(recent_delays) / len(recent_delays)) >= 6.0:
                 faults.add("DELAY")
 
             # --- Fault Detector 4: TIME_SKEW ---

@@ -28,6 +28,13 @@ class ODDEngine:
         # Precompute segment -> nearest weather station ID
         self.segment_to_weather: Dict[str, str] = self._build_weather_mapping()
 
+        # Road group to weather stations mapping for corridor-wide environmental phenomena
+        self.road_group_to_stations: Dict[str, List[str]] = {
+            "MAIN": ["WX-01", "WX-02", "WX-03", "WX-04", "WX-05", "WX-08"],
+            "NORTH": ["WX-06"],
+            "SOUTH": ["WX-07"],
+        }
+
         # Precompute segment -> RSU ID via v2x_zone
         self.segment_to_rsu: Dict[str, str] = self._build_rsu_mapping()
 
@@ -112,9 +119,10 @@ class ODDEngine:
                 comp_id = ev.get("component_id")
                 if comp_type == "RSU" and comp_id in self.rsu_available:
                     status = ev.get("status", "OK")
-                    loss = ev.get("network_packet_loss_pct", 0.0)
-                    # Mark unavailable if NO_HEARTBEAT, or heavy packet loss (> 50%)
-                    if status == "NO_HEARTBEAT" or loss > 50.0:
+                    loss = float(ev.get("network_packet_loss_pct", 0.0))
+                    hb_age = float(ev.get("last_heartbeat_age_sec", 0.0))
+                    # Mark unavailable if status != OK, or packet loss > 10%, or heartbeat age > 20s
+                    if status != "OK" or loss > 10.0 or hb_age > 20.0:
                         self.rsu_available[comp_id] = False
                     else:
                         self.rsu_available[comp_id] = True
@@ -158,11 +166,20 @@ class ODDEngine:
         structure = seg.get("structure", "open")
         weight_limit = seg.get("weight_limit_t", 44.0)
 
-        # Environmental conditions on this segment
+        # Environmental conditions on this segment (conservative corridor coverage)
         st_id = self.segment_to_weather.get(current_segment, "WX-01")
-        wx = self.weather_by_station.get(st_id, {})
-        current_vis = wx.get("visibility_m", 1000.0)
-        current_rain = wx.get("rain_level", 0)
+        road_group = seg.get("road_group", "MAIN")
+        rg_stations = self.road_group_to_stations.get(road_group, [st_id])
+        relevant_stations = list(set([st_id] + rg_stations))
+
+        current_vis = min(
+            self.weather_by_station.get(s, {}).get("visibility_m", 1000.0)
+            for s in relevant_stations
+        )
+        current_rain = max(
+            self.weather_by_station.get(s, {}).get("rain_level", 0)
+            for s in relevant_stations
+        )
 
         # V2X status on this segment
         rsu_id = self.segment_to_rsu.get(current_segment, "RSU-01")
