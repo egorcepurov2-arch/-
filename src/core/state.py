@@ -7,6 +7,8 @@ from src.config import ReferenceData, load_reference_data
 from src.network.graph import NetworkGraph
 from src.network.estimator import SegmentStateEstimator
 from src.network.router import CorridorRouter
+from src.safety.odd_engine import ODDEngine
+from src.safety.guard import SafetyGuard
 
 
 class SystemState:
@@ -28,6 +30,8 @@ class SystemState:
         self.graph = NetworkGraph(self.ref)
         self.estimator = SegmentStateEstimator(self.ref)
         self.router = CorridorRouter(self.graph, self.ref)
+        self.odd_engine = ODDEngine(self.ref)
+        self.safety_guard = SafetyGuard(self.graph, self.ref)
 
         # Segment estimates cache
         self.latest_segment_estimates: List[Dict[str, Any]] = []
@@ -40,6 +44,8 @@ class SystemState:
                 "vehicle_id": vid,
                 "current_segment": None,
                 "speed_kmh": 0.0,
+                "gnss_quality": 1.0,
+                "map_age_min": 0.0,
                 "odd_status": "COMPLIANT",
                 "violation_codes": [],
                 "motion_action": "CONTINUE",
@@ -56,6 +62,7 @@ class SystemState:
         self.source_assessments: Dict[str, Dict[str, Any]] = {}
         for src_id in self.ref.source_ids:
             self.source_assessments[src_id] = {
+                "source_id": src_id,
                 "status": "OK",
                 "trust_score": 1.0,
                 "confidence": 1.0,
@@ -76,15 +83,16 @@ class SystemState:
             },
         )
 
-        # 2. Track vehicle telemetry
-        seen_in_packet: Set[str] = set()
+        # 2. Update environmental observations (weather & RSU)
+        self.odd_engine.update_from_events(events)
+
+        # 3. Track vehicle telemetry
         for ev in events:
             ev_type = ev.get("event_type")
 
             if ev_type == "VEHICLE_TELEMETRY":
                 vid = ev.get("vehicle_id")
                 if vid and vid in self.vehicles_last_seen:
-                    seen_in_packet.add(vid)
                     v_state = self.vehicles_last_seen[vid]
                     v_state["current_segment"] = ev.get("segment_id")
                     v_state["speed_kmh"] = ev.get("speed_kmh", 0.0)
@@ -94,6 +102,10 @@ class SystemState:
                         v_state["cargo_priority"] = ev["cargo_priority"]
                     if ev.get("odd_profile_id"):
                         v_state["odd_profile_id"] = ev["odd_profile_id"]
+                    if ev.get("gnss_quality") is not None:
+                        v_state["gnss_quality"] = ev["gnss_quality"]
+                    if ev.get("map_age_min") is not None:
+                        v_state["map_age_min"] = ev["map_age_min"]
                     v_state["last_event_time"] = ev.get("event_time")
                     v_state["is_active"] = True
                     v_state["last_seen_step"] = self.step_index
@@ -105,8 +117,11 @@ class SystemState:
         # 1. State estimates for all 86 segments
         state_estimates = self.latest_segment_estimates
         if not state_estimates:
-            # Fallback if update_from_events was not called
             state_estimates = self.estimator.process_step(self.step_index, [])
+
+        blocked_segments = {
+            item["segment_id"] for item in state_estimates if item["state"] == "CLOSED"
+        }
 
         # 2. Source assessments for all 50 infrastructure sources
         source_assessments = []
@@ -120,31 +135,22 @@ class SystemState:
                 "fault_types": src_info.get("fault_types", []),
             })
 
-        # 3. Vehicle assessments (ODD) for all 72 vehicles
-        vehicle_assessments = []
-        for vid in self.ref.vehicle_ids:
-            v_info = self.vehicles_last_seen.get(vid, {})
-            is_active = v_info.get("is_active", True)
-            if not is_active or not v_info.get("current_segment"):
-                vehicle_assessments.append({
-                    "vehicle_id": vid,
-                    "odd_status": "UNKNOWN",
-                    "violation_codes": [],
-                    "confidence": 1.0,
-                })
-            else:
-                vehicle_assessments.append({
-                    "vehicle_id": vid,
-                    "odd_status": v_info.get("odd_status", "COMPLIANT"),
-                    "violation_codes": v_info.get("violation_codes", []),
-                    "confidence": 1.0,
-                })
+        # 3. Vehicle assessments (ODD Engine) for all 72 vehicles
+        vehicle_assessments = self.odd_engine.evaluate_all(self.vehicles_last_seen)
 
-        # 4. Vehicle actions for all 72 vehicles via CorridorRouter
-        vehicle_actions = self.router.plan_vehicle_actions(
+        # 4. Vehicle actions (Router + Safety Guard) for all 72 vehicles
+        provisional_actions = self.router.plan_vehicle_actions(
             step_index=self.step_index,
             segment_estimates=state_estimates,
             vehicles_state=self.vehicles_last_seen,
+        )
+
+        final_actions = self.safety_guard.arbitrate_actions(
+            step_index=self.step_index,
+            provisional_actions=provisional_actions,
+            odd_assessments=vehicle_assessments,
+            vehicles_state=self.vehicles_last_seen,
+            blocked_segments=blocked_segments,
         )
 
         snapshot = {
@@ -154,7 +160,7 @@ class SystemState:
             "state_estimates": state_estimates,
             "source_assessments": source_assessments,
             "vehicle_assessments": vehicle_assessments,
-            "vehicle_actions": vehicle_actions,
+            "vehicle_actions": final_actions,
         }
 
         return snapshot
