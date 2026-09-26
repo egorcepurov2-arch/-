@@ -40,8 +40,11 @@ class TestEvaluationMetrics(unittest.TestCase):
         self.assertAlmostEqual(compute_multilabel_f1(truth, pred, labels), 1.0)
 
     def test_evaluator_quick_run(self):
+        zip_path = Path("/home/vip/конкурс/Беспилотный_коридор.zip")
+        if not zip_path.exists():
+            self.skipTest("Training data archive not present in CI environment")
         ref = load_reference_data()
-        evaluator = ScenarioEvaluator(scenario_id="TRAIN-001", ref=ref)
+        evaluator = ScenarioEvaluator(scenario_id="TRAIN-001", zip_path=zip_path, ref=ref)
         state = SystemState(ref=ref)
 
         fixture_path = Path(__file__).parent / "fixtures/sample_packets.ndjson"
