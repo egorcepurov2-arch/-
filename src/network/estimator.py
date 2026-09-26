@@ -60,6 +60,8 @@ class SegmentStateEstimator:
                 road_obs[sid].append(ev)
             elif ev_type == "DIGITAL_TWIN_SEGMENT":
                 twin_obs[sid].append(ev)
+            elif ev_type == "V2X_MESSAGE" and ev.get("message_type") == "ROAD_STATE":
+                road_obs[sid].append(ev)
             elif ev_type == "VEHICLE_TELEMETRY":
                 spd = ev.get("speed_kmh")
                 if spd is not None:
@@ -144,6 +146,7 @@ class SegmentStateEstimator:
 
         speeds: List[float] = []
         occupancies: List[float] = []
+        queues: List[float] = []
 
         for ev in road_events:
             src_id = ev.get("source_id", "")
@@ -173,8 +176,12 @@ class SegmentStateEstimator:
 
             if ev.get("speed_kmh") is not None:
                 speeds.append(ev["speed_kmh"])
+            elif ev.get("advisory_speed_kmh") is not None:
+                speeds.append(ev["advisory_speed_kmh"])
             if ev.get("occupancy_pct") is not None:
                 occupancies.append(ev["occupancy_pct"])
+            if ev.get("queue_estimate_m") is not None:
+                queues.append(float(ev["queue_estimate_m"]))
 
         # Fallback to digital twin if no trusted road detector reported closures
         if not has_closure_signal and twin_events:
@@ -196,6 +203,7 @@ class SegmentStateEstimator:
 
         avg_speed = sum(speeds) / len(speeds) if speeds else speed_limit
         avg_occ = sum(occupancies) / len(occupancies) if occupancies else 30.0
+        max_queue = max(queues) if queues else 0.0
 
         # Classification logic strictly matching ground truth definitions
         if detector_reported_closed or lanes_open == 0:
@@ -205,7 +213,12 @@ class SegmentStateEstimator:
             return "PARTIAL_BLOCK", 0.98, ["STATE_PARTIAL_BLOCK"], lanes_open, avg_speed, avg_occ
 
         # When all lanes are physically open, evaluate congestion
-        is_congested = (avg_occ >= 70.0) or (avg_speed > 0 and avg_speed <= speed_limit * 0.65)
+        # Congestion strictly requires verified queue (>= 25m) and degraded speed (<= 65 km/h),
+        # OR extreme occupancy (>= 75%)
+        is_congested = (
+            (max_queue >= 25.0 and avg_speed > 0 and avg_speed <= 65.0)
+            or (avg_occ >= 75.0 and avg_speed > 0 and avg_speed <= 65.0)
+        )
         if is_congested:
             return "CONGESTED", 0.95, ["STATE_CONGESTED"], total_lanes, avg_speed, avg_occ
 
