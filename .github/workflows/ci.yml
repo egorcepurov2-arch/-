@@ -1,0 +1,50 @@
+name: CI / Application Health Check
+
+on:
+  push:
+    branches:
+      - dev
+      - master
+      - main
+  pull_request:
+    branches:
+      - dev
+      - master
+      - main
+
+jobs:
+  test:
+    name: Test Application & Validate Schemas
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Unit Tests (Reference Catalogs & Schema)
+        run: |
+          python -m unittest discover tests -v
+
+      - name: Run Stream Validation Test (TRAIN Packets vs Schema)
+        run: |
+          python tests/validate_stream.py
+
+      - name: Test End-to-End Pipeline (stdin -> app.py -> stdout)
+        run: |
+          cat tests/fixtures/sample_packets.ndjson | python src/app.py > /tmp/ci_output.ndjson
+          test -s /tmp/ci_output.ndjson
+          LINES=$(wc -l < /tmp/ci_output.ndjson)
+          echo "Processed $LINES decision lines successfully."
+          test "$LINES" -eq 5

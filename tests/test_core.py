@@ -81,18 +81,22 @@ class TestDecisionSchemaCompliance(unittest.TestCase):
 
     def test_real_packet_processing_and_telemetry_update(self):
         state = SystemState(ref=self.ref)
+        fixture_path = PROJECT_ROOT / "tests" / "fixtures" / "sample_packets.ndjson"
         zip_path = Path("/home/vip/конкурс/Беспилотный_коридор.zip")
-        if not zip_path.exists():
-            self.skipTest(f"Data archive not found at {zip_path}")
 
-        # Load real packet 1 from TRAIN-001
         packet = None
-        with zipfile.ZipFile(zip_path) as outer:
-            with outer.open("03_Данные_Беспилотный_коридор.zip") as inner_file:
-                with zipfile.ZipFile(io.BytesIO(inner_file.read())) as inner:
-                    with inner.open("02_train/TRAIN-001/packets.ndjson.gz") as p_file:
-                        with gzip.GzipFile(fileobj=p_file) as gz:
-                            packet = json.loads(gz.readline().decode("utf-8").strip())
+        if fixture_path.exists():
+            with open(fixture_path, "r", encoding="utf-8") as f:
+                packet = json.loads(f.readline().strip())
+        elif zip_path.exists():
+            with zipfile.ZipFile(zip_path) as outer:
+                with outer.open("03_Данные_Беспилотный_коридор.zip") as inner_file:
+                    with zipfile.ZipFile(io.BytesIO(inner_file.read())) as inner:
+                        with inner.open("02_train/TRAIN-001/packets.ndjson.gz") as p_file:
+                            with gzip.GzipFile(fileobj=p_file) as gz:
+                                packet = json.loads(gz.readline().decode("utf-8").strip())
+        else:
+            self.skipTest("No packet source available for integration test")
 
         self.assertIsNotNone(packet)
         decision = state.process_packet(packet)

@@ -29,7 +29,20 @@ def load_decision_schema() -> dict:
 
 
 def get_train_packets(count: int = 5) -> list:
-    """Fetch first N packets from TRAIN-001."""
+    """Fetch first N packets from fixture or TRAIN-001 archive."""
+    fixture_path = PROJECT_ROOT / "tests" / "fixtures" / "sample_packets.ndjson"
+    if fixture_path.exists():
+        packets = []
+        with open(fixture_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line_str = line.strip()
+                if line_str:
+                    packets.append(json.loads(line_str))
+                    if len(packets) >= count:
+                        break
+        if packets:
+            return packets
+
     zip_path = Path("/home/vip/конкурс/Беспилотный_коридор.zip")
     if not zip_path.exists():
         print(f"[ERROR] Data archive not found at {zip_path}", file=sys.stderr)
