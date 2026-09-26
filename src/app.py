@@ -86,8 +86,8 @@ def main() -> None:
                     file=sys.stderr,
                 )
 
-    except KeyboardInterrupt:
-        print("\n[INFO] Runner interrupted by user.", file=sys.stderr)
+    except (KeyboardInterrupt, BrokenPipeError):
+        pass
     except Exception as stream_err:
         print(f"[FATAL] Unhandled streaming error: {stream_err}", file=sys.stderr)
         sys.exit(1)
