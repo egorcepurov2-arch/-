@@ -1,0 +1,4 @@
+# Python dependencies for IT_CHAMPIONSHIP_NGGTI_VUPSEN_Squad
+# The core runner relies purely on Python standard library for maximum speed and zero overhead.
+# jsonschema is used for validation and local test suite.
+jsonschema>=4.20.0
